@@ -49,14 +49,14 @@ fn main() {
 
 ## Available methods
 
-[X] List VOD assets   
-[X] Get VOD asset   
-[X] List VOD tasks   
-[X] List streams   
-[X] Push RTMP (linux only - ffmpeg dep)   
-[X] Direct Upload   
-[X] Import from external URL   
-[X] Export to IPFS   
-[X] Generate presigned URL   
+- [X] List VOD assets   
+- [X] Get VOD asset   
+- [X] List VOD tasks   
+- [X] List streams   
+- [X] Push RTMP (linux only - ffmpeg dep)   
+- [X] Direct Upload   
+- [X] Import from external URL   
+- [X] Export to IPFS   
+- [X] Generate presigned URL   
 
 
