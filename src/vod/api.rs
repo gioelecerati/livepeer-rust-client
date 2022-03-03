@@ -1,0 +1,155 @@
+use crate::errors;
+use async_std;
+use serde_json;
+
+#[derive(Debug, Clone)]
+pub struct VodApi {
+    pub client: crate::LivepeerClient,
+    pub urls: crate::api::urls::LivepeerUrls,
+}
+
+impl crate::vod::Vod for VodApi {
+    fn list_assets(&self) -> Result<serde_json::Value, errors::Error> {
+        self.clone()._get_assets()
+    }
+
+    fn get_presigned_url(&self, video_name: String) -> Result<String, errors::Error> {
+        self.clone()._get_presigned_url(video_name)
+    }
+
+    fn upload_asset(
+        &self,
+        presigned_url: String,
+        video_file_path: String,
+    ) -> Result<(), errors::Error> {
+        self.clone()._upload_file(presigned_url, video_file_path)
+    }
+
+    fn get_asset_by_id(&self, asset_id: String) -> Result<serde_json::Value, errors::Error> {
+        self.clone()._get_asset_by_id(asset_id)
+    }
+
+    fn export_to_ipfs(
+        &self,
+        asset_id: String,
+        nft_metadata: String,
+    ) -> Result<serde_json::Value, errors::Error> {
+        let json_nft_metadata = serde_json::from_str(&nft_metadata).unwrap();
+        self.clone()._export_to_ipfs(asset_id, json_nft_metadata)
+    }
+}
+
+impl VodApi {
+    pub fn new(client: &crate::LivepeerClient) -> Self {
+        VodApi {
+            client: client.clone(),
+            urls: crate::api::urls::LivepeerUrls::new(),
+        }
+    }
+
+    /// List all assets
+    /// <https://docs.livepeer.com/api/vod/assets.html#list-all-assets>
+    /// 
+    pub fn _get_assets(self: Self) -> Result<serde_json::Value, errors::Error> {
+        let res: Result<serde_json::Value, errors::Error> = crate::utils::SurfRequest::get(
+            format!("{}{}", self.client.config.host, self.urls.vod.list_assets),
+            self.client,
+        );
+        res
+    }
+
+    /// Get presigned url
+    /// <https://docs.livepeer.com/api/vod/assets.html#get-presigned-url>
+    /// 
+    pub fn _get_asset_by_id(
+        self: Self,
+        asset_id: String,
+    ) -> Result<serde_json::Value, errors::Error> {
+        let res: Result<serde_json::Value, errors::Error> = crate::utils::SurfRequest::get(
+            format!(
+                "{}{}/{}",
+                self.client.config.host, self.urls.vod.list_assets, asset_id
+            ),
+            self.client,
+        );
+        res
+    }
+
+    /// Get presigned url
+    /// <https://docs.livepeer.com/api/vod/assets.html#get-presigned-url>
+    /// 
+    pub fn _get_presigned_url(self: Self, video_name: String) -> Result<String, errors::Error> {
+        let body = serde_json::to_string(&serde_json::json!({ "name": video_name })).unwrap();
+        let response: Result<serde_json::Value, errors::Error> = crate::utils::SurfRequest::post(
+            format!(
+                "{}{}",
+                self.client.config.host, self.urls.vod.get_presigned_url
+            ),
+            body,
+            self.client,
+        );
+
+        if let Ok(_r) = response {
+            let presigned_url = _r["presigned_url"].as_str().unwrap();
+            Ok(presigned_url.to_string())
+        } else {
+            Err(response.err().unwrap())
+        }
+    }
+
+    /// Upload asset
+    /// <https://docs.livepeer.com/api/vod/assets.html#upload-asset>
+    /// 
+    pub fn _upload_file(
+        self: Self,
+        presigned_url: String,
+        video_file_path: String,
+    ) -> Result<(), errors::Error> {
+        let mut res: Result<(), errors::Error> = Err(errors::Error::UNKNOWN);
+        let video_buffer = std::fs::read(video_file_path).unwrap();
+
+        async_std::task::block_on(async {
+            let response = surf::put(&presigned_url)
+                .header("Content-Type", "video/mp4")
+                .body(video_buffer)
+                .await;
+
+            match response {
+                Ok(response) => match response.status() {
+                    surf::StatusCode::Ok => {
+                        res = Ok(());
+                    }
+                    _ => {
+                        let err = errors::Error::from_response(&response);
+                        res = Err(err);
+                    }
+                },
+                Err(e) => {
+                    println!("{:?}", e);
+                }
+            }
+        });
+        return res;
+    }
+
+    /// Export asset to IPFS
+    /// <https://docs.livepeer.com/api/vod/assets.html#export-asset-to-ipfs>
+    /// 
+    pub fn _export_to_ipfs(
+        self: Self,
+        asset_id: String,
+        nft_metadata: serde_json::Value,
+    ) -> Result<serde_json::Value, errors::Error> {
+        let body = serde_json::to_string(&serde_json::json!({ "ipfs": nft_metadata })).unwrap();
+        let res: Result<serde_json::Value, errors::Error> = crate::utils::SurfRequest::post(
+            format!(
+                "{}/api/asset/{}/{}",
+                self.client.config.host, asset_id, self.urls.vod.export
+            ),
+            body,
+            self.client,
+        );
+
+        res
+    }
+}
