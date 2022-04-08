@@ -80,10 +80,6 @@ impl Livepeer {
     /// * `api_token` - User API token
     /// * `env` - Livepeer Environment
     /// # Example
-    /// ```
-    /// use livepeer::Livepeer;
-    /// let livepeer = Livepeer::new("API_TOKEN", None);
-    /// ```
     pub fn new(api_token: String, env: Option<LivepeerEnv>) -> Livepeer {
         let client = LivepeerClient::new(api_token.clone(), env.clone());
         Livepeer {

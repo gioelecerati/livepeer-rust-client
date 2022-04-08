@@ -20,6 +20,7 @@ pub struct TaskUrls {
 #[derive(Debug, Clone, Copy)]
 pub struct AuthUrls {
     pub login: &'static str,
+    pub info: &'static str
 }
 
 impl LivepeerUrls {
@@ -36,6 +37,7 @@ impl LivepeerUrls {
 
         let auth = AuthUrls {
             login: "/api/user/token",
+            info: "api/user/me",
         };
 
         let urls = LivepeerUrls { vod, task, auth };
