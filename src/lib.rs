@@ -1,9 +1,11 @@
+
 pub mod api;
 pub mod errors;
 pub mod live;
 pub mod user;
 pub mod utils;
 pub mod vod;
+pub mod tests;
 
 #[derive(Debug, Clone)]
 pub enum LivepeerEnv {
@@ -80,8 +82,15 @@ impl Livepeer {
     /// * `api_token` - User API token
     /// * `env` - Livepeer Environment
     /// # Example
-    pub fn new(api_token: String, env: Option<LivepeerEnv>) -> Livepeer {
-        let client = LivepeerClient::new(api_token.clone(), env.clone());
+    pub fn new(api_token: Option<String>, env: Option<LivepeerEnv>) -> Livepeer {
+        let mut _api_token = String::new();
+        if api_token.is_some() {
+            _api_token = api_token.unwrap();
+        } else {
+            // Get API token from environment
+            _api_token = std::env::var("LIVEPEER_API_TOKEN").unwrap_or_default();
+        }
+        let client = LivepeerClient::new(_api_token.clone(), env.clone());
         Livepeer {
             _client: client.clone(),
             _env: env.clone().unwrap_or(LivepeerEnv::Dev),
@@ -95,3 +104,4 @@ impl Livepeer {
         }
     }
 }
+

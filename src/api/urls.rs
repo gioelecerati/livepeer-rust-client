@@ -28,7 +28,7 @@ impl LivepeerUrls {
         let vod = VodUrls {
             list_assets: "/api/asset",
             get_presigned_url: "/api/asset/request-upload",
-            export: "/export",
+            export: "/api/asset/{{ASSET_ID}}/export",
         };
 
         let task = TaskUrls {

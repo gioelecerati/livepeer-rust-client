@@ -13,7 +13,7 @@ impl crate::vod::Vod for VodApi {
         self.clone()._get_assets()
     }
 
-    fn get_presigned_url(&self, video_name: String) -> Result<String, errors::Error> {
+    fn get_presigned_url(&self, video_name: String) -> Result<serde_json::Value, errors::Error> {
         self.clone()._get_presigned_url(video_name)
     }
 
@@ -48,7 +48,7 @@ impl VodApi {
     }
 
     /// List all assets
-    /// <https://docs.livepeer.com/api/vod/assets.html#list-all-assets>
+    /// <https://livepeer.com/docs/api-reference/vod/list>
     /// 
     pub fn _get_assets(self: Self) -> Result<serde_json::Value, errors::Error> {
         let res: Result<serde_json::Value, errors::Error> = crate::utils::SurfRequest::get(
@@ -58,8 +58,8 @@ impl VodApi {
         res
     }
 
-    /// Get presigned url
-    /// <https://docs.livepeer.com/api/vod/assets.html#get-presigned-url>
+    /// Get asset by id
+    /// <https://livepeer.com/docs/api-reference/vod/list#retrieve-an-asset>
     /// 
     pub fn _get_asset_by_id(
         self: Self,
@@ -76,9 +76,9 @@ impl VodApi {
     }
 
     /// Get presigned url
-    /// <https://docs.livepeer.com/api/vod/assets.html#get-presigned-url>
+    /// <https://livepeer.com/docs/api-reference/vod/upload>
     /// 
-    pub fn _get_presigned_url(self: Self, video_name: String) -> Result<String, errors::Error> {
+    pub fn _get_presigned_url(self: Self, video_name: String) -> Result<serde_json::Value, errors::Error> {
         let body = serde_json::to_string(&serde_json::json!({ "name": video_name })).unwrap();
         let response: Result<serde_json::Value, errors::Error> = crate::utils::SurfRequest::post(
             format!(
@@ -89,16 +89,11 @@ impl VodApi {
             self.client,
         );
 
-        if let Ok(_r) = response {
-            let presigned_url = _r["presigned_url"].as_str().unwrap();
-            Ok(presigned_url.to_string())
-        } else {
-            Err(response.err().unwrap())
-        }
+        response
     }
 
     /// Upload asset
-    /// <https://docs.livepeer.com/api/vod/assets.html#upload-asset>
+    /// <https://livepeer.com/docs/api-reference/vod/upload>
     /// 
     pub fn _upload_file(
         self: Self,
@@ -133,7 +128,7 @@ impl VodApi {
     }
 
     /// Export asset to IPFS
-    /// <https://docs.livepeer.com/api/vod/assets.html#export-asset-to-ipfs>
+    /// <https://livepeer.com/docs/api-reference/vod/export>
     /// 
     pub fn _export_to_ipfs(
         self: Self,
@@ -144,7 +139,7 @@ impl VodApi {
         let res: Result<serde_json::Value, errors::Error> = crate::utils::SurfRequest::post(
             format!(
                 "{}/api/asset/{}/{}",
-                self.client.config.host, asset_id, self.urls.vod.export
+                self.client.config.host, asset_id, "export"
             ),
             body,
             self.client,

@@ -3,7 +3,7 @@ pub mod task;
 
 pub trait Vod {
     fn list_assets(&self) -> Result<serde_json::Value, crate::errors::Error>;
-    fn get_presigned_url(&self, video_name: String) -> Result<String, crate::errors::Error>;
+    fn get_presigned_url(&self, video_name: String) -> Result<serde_json::Value, crate::errors::Error>;
     fn upload_asset(
         &self,
         video_name: String,

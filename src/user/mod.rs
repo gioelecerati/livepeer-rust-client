@@ -26,7 +26,7 @@ pub fn get_user_id(client: &crate::LivepeerClient) -> String {
     if let Ok(_r) = response {
         _user_id = _r["id"].as_str().unwrap().to_string();
     } else {
-        panic!("Error creating stream");
+        panic!("Error getting user info");
     }
     _user_id
 }

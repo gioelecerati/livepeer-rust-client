@@ -30,4 +30,14 @@ impl TaskApi {
         );
         res
     }
+
+    /// Get task by id
+    /// <https://docs.livepeer.com/api/vod/tasks.html#get-task-by-id>
+    pub fn _get_task_by_id(self: Self, task_id: String) -> Result<serde_json::Value, errors::Error> {
+        let res: Result<serde_json::Value, errors::Error> = crate::utils::SurfRequest::get(
+            format!("{}{}/{}", self.client.config.host, self.urls.task.list_tasks, task_id),
+            self.client,
+        );
+        res
+    }
 }
