@@ -1,7 +1,7 @@
 use crate::errors;
 use async_std;
 use serde_json;
-use surf::StatusCode;
+use surf::{StatusCode};
 
 pub struct SurfRequest {}
 
@@ -58,11 +58,12 @@ impl SurfRequest {
 
             match response {
                 Ok(mut response) => match response.status() {
-                    StatusCode::Ok => {
+                    StatusCode::Ok | StatusCode::Created | StatusCode::NoContent => {
                         let body = response.body_json::<serde_json::Value>().await.unwrap();
                         res = Ok(body);
                     }
                     _ => {
+                        println!("Error on API Call with status code: {}",response.status());
                         let err = errors::Error::from_response(&response);
                         res = Err(err);
                     }

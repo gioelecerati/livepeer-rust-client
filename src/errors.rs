@@ -12,6 +12,8 @@ pub enum Error {
     CONFLICT,
     UNPROCESSABLEENTITY,
     INTERNALSERVERERROR,
+    PRECODINTIONFAILED,
+    BADGATEWAY
 }
 
 impl Error {
@@ -24,7 +26,8 @@ impl Error {
             StatusCode::Conflict => Error::CONFLICT,
             StatusCode::UnprocessableEntity => Error::UNPROCESSABLEENTITY,
             StatusCode::InternalServerError => Error::INTERNALSERVERERROR,
-
+            StatusCode::PreconditionFailed => Error::PRECODINTIONFAILED,
+            StatusCode::BadGateway => Error::BADGATEWAY,
             _ => Error::UNKNOWN,
         }
     }

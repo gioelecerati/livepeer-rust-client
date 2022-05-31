@@ -29,6 +29,14 @@ impl crate::vod::Vod for VodApi {
         self.clone()._get_asset_by_id(asset_id)
     }
 
+    fn import_asset(
+        &self,
+        video_file_path: String,
+        video_name: String,
+    ) -> Result<serde_json::Value, errors::Error> {
+        self.clone()._import_asset(video_file_path, video_name)
+    }
+
     fn export_to_ipfs(
         &self,
         asset_id: String,
@@ -72,6 +80,22 @@ impl VodApi {
             ),
             self.client,
         );
+        res
+    }
+
+    /// Import asset
+    /// <https://livepeer.com/docs/api-reference/vod/list#import-an-asset>
+    /// 
+    pub fn _import_asset(self: Self, url: String, name: String) -> Result<serde_json::Value, errors::Error> {
+        let res: Result<serde_json::Value, errors::Error> = crate::utils::SurfRequest::post(
+            format!("{}{}", self.client.config.host, self.urls.vod.import_asset),
+            serde_json::json!({
+                "url": url,
+                "name": name
+            }).to_string(),
+            self.client,
+        );
+        println!("{:?}",res);
         res
     }
 

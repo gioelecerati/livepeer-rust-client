@@ -10,6 +10,7 @@ pub trait Vod {
         file_path: String,
     ) -> Result<(), crate::errors::Error>;
     fn get_asset_by_id(&self, asset_id: String) -> Result<serde_json::Value, crate::errors::Error>;
+    fn import_asset(&self, url: String, name: String) -> Result<serde_json::Value, crate::errors::Error>;
     fn export_to_ipfs(
         &self,
         asset_id: String,

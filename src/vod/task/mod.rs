@@ -40,4 +40,28 @@ impl TaskApi {
         );
         res
     }
+    
+    pub fn get_task_status(self: Self, task_id: String) -> Result<String, errors::Error> {
+        let task = self._get_task_by_id(task_id)?;
+        let task_status = task["status"]["phase"].as_str().unwrap();
+        return Ok(task_status.to_string());
+    }
+
+    pub fn wait_for_task(self: Self, task_id: String) -> bool {
+        let mut task_status = String::from("running");
+    
+        while task_status == "running" {
+            task_status = self.clone().get_task_status(task_id.to_string()).unwrap();
+            // sleep 1s
+            std::thread::sleep(std::time::Duration::from_secs(1));
+        }
+    
+        if task_status != "completed" {
+            return false
+        }else{
+            return true
+        }
+    }
 }
+
+
