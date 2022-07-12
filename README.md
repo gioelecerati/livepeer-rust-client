@@ -1,4 +1,4 @@
-# Livepeer Client
+# livepeer-rs
 
 `0.0.1`
 
