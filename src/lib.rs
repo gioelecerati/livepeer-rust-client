@@ -1,11 +1,10 @@
-
 pub mod api;
 pub mod errors;
 pub mod live;
+pub mod tests;
 pub mod user;
 pub mod utils;
 pub mod vod;
-pub mod tests;
 
 #[derive(Debug, Clone)]
 pub enum LivepeerEnv {
@@ -51,7 +50,7 @@ impl LivepeerClient {
     /// Create a new Livepeer Client
     /// # Arguments
     /// * `api_token` - User API token
-    /// * `env` - Livepeer Environment 
+    /// * `env` - Livepeer Environment
     fn new(api_token: String, env: Option<LivepeerEnv>) -> Self {
         let host = match env {
             Some(LivepeerEnv::Dev) => "http://localhost:3004",
@@ -104,4 +103,3 @@ impl Livepeer {
         }
     }
 }
-

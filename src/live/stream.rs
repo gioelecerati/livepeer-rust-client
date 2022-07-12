@@ -37,7 +37,10 @@ impl Stream {
 
     /// Get stream by id
     /// <https://docs.livepeer.com/api/live/streams.html#get-stream-by-id>
-    pub fn get_stream_by_id(self: Self, stream_id: String) -> Result<serde_json::Value, errors::Error> {
+    pub fn get_stream_by_id(
+        self: Self,
+        stream_id: String,
+    ) -> Result<serde_json::Value, errors::Error> {
         let res: Result<serde_json::Value, errors::Error> = crate::utils::SurfRequest::get(
             format!("{}{}/{}", self.client.config.host, "/api/stream", stream_id),
             self.client,

@@ -1,7 +1,7 @@
 use crate::errors;
 use async_std;
 use serde_json;
-use surf::{StatusCode};
+use surf::StatusCode;
 
 pub struct SurfRequest {}
 
@@ -63,7 +63,44 @@ impl SurfRequest {
                         res = Ok(body);
                     }
                     _ => {
-                        println!("Error on API Call with status code: {}",response.status());
+                        println!("Error on API POST with status code: {}", response.status());
+                        let err = errors::Error::from_response(&response);
+                        res = Err(err);
+                    }
+                },
+                Err(e) => {
+                    println!("{:?}", e);
+                }
+            }
+        });
+        return res;
+    }
+
+    pub fn patch(
+        url: String,
+        body: String,
+        client: crate::LivepeerClient,
+    ) -> Result<serde_json::Value, errors::Error> {
+        let mut res: Result<serde_json::Value, errors::Error> = Err(errors::Error::UNKNOWN);
+
+        async_std::task::block_on(async {
+            let response = surf::patch(&format!("{}", url))
+                .header(
+                    "Authorization",
+                    format!("Bearer {}", client.config.api_token),
+                )
+                .header("Content-Type", "application/json")
+                .body(body)
+                .await;
+
+            match response {
+                Ok(mut response) => match response.status() {
+                    StatusCode::Ok | StatusCode::Created | StatusCode::NoContent => {
+                        let body = response.body_json::<serde_json::Value>().await.unwrap();
+                        res = Ok(body);
+                    }
+                    _ => {
+                        println!("Error on API PATCH with status code: {}", response.status());
                         let err = errors::Error::from_response(&response);
                         res = Err(err);
                     }

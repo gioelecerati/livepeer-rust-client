@@ -7,7 +7,7 @@ pub struct LivepeerUrls {
 
 #[derive(Debug, Clone, Copy)]
 pub struct VodUrls {
-    pub list_assets: &'static str,
+    pub assets: &'static str,
     pub import_asset: &'static str,
     pub get_presigned_url: &'static str,
     pub export: &'static str,
@@ -21,13 +21,13 @@ pub struct TaskUrls {
 #[derive(Debug, Clone, Copy)]
 pub struct AuthUrls {
     pub login: &'static str,
-    pub info: &'static str
+    pub info: &'static str,
 }
 
 impl LivepeerUrls {
     pub fn new() -> Self {
         let vod = VodUrls {
-            list_assets: "/api/asset",
+            assets: "/api/asset",
             import_asset: "/api/asset/import",
             get_presigned_url: "/api/asset/request-upload",
             export: "/api/asset/{{ASSET_ID}}/export",

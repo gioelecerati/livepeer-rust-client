@@ -4,9 +4,8 @@ pub struct Rtmp {
 }
 
 /// Live RTMP Methods
-/// 
+///
 impl Rtmp {
-
     /// Temp ffmpeg command spawn. TODO: Replace with a proper library.
     pub fn push(self: Self, stream_key: &String, file_path: &String) {
         // spawn ffmpeg command

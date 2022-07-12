@@ -17,11 +17,10 @@ impl User {
 /// Get the user id from the API
 pub fn get_user_id(client: &crate::LivepeerClient) -> String {
     let mut _user_id = String::new();
-    let response: Result<serde_json::Value, crate::errors::Error> =
-        crate::utils::SurfRequest::get(
-            format!("{}{}", client.config.host, "/api/user/me"),
-            client.clone(),
-        );
+    let response: Result<serde_json::Value, crate::errors::Error> = crate::utils::SurfRequest::get(
+        format!("{}{}", client.config.host, "/api/user/me"),
+        client.clone(),
+    );
 
     if let Ok(_r) = response {
         _user_id = _r["id"].as_str().unwrap().to_string();

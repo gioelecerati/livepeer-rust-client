@@ -3,14 +3,28 @@ pub mod task;
 
 pub trait Vod {
     fn list_assets(&self) -> Result<serde_json::Value, crate::errors::Error>;
-    fn get_presigned_url(&self, video_name: String) -> Result<serde_json::Value, crate::errors::Error>;
+    fn get_presigned_url(
+        &self,
+        video_name: String,
+    ) -> Result<serde_json::Value, crate::errors::Error>;
     fn upload_asset(
         &self,
         video_name: String,
         file_path: String,
     ) -> Result<(), crate::errors::Error>;
     fn get_asset_by_id(&self, asset_id: String) -> Result<serde_json::Value, crate::errors::Error>;
-    fn import_asset(&self, url: String, name: String) -> Result<serde_json::Value, crate::errors::Error>;
+    fn update_asset(
+        &self,
+        asset_id: String,
+        name: String,
+        meta: Option<serde_json::Value>,
+        storage: Option<serde_json::Value>,
+    ) -> Result<serde_json::Value, crate::errors::Error>;
+    fn import_asset(
+        &self,
+        url: String,
+        name: String,
+    ) -> Result<serde_json::Value, crate::errors::Error>;
     fn export_to_ipfs(
         &self,
         asset_id: String,
