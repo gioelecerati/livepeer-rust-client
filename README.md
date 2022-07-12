@@ -17,7 +17,7 @@ http://localhost:8080/livepeer_client
 ## Example usage
 
 ```rust
-use livepeer_client::{vod::Vod, Livepeer, LivepeerEnv};
+use livepeer_rs::{vod::Vod, Livepeer, LivepeerEnv};
 
 fn main() {
     let _env = LivepeerEnv::Prod;
