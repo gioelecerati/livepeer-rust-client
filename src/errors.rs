@@ -14,6 +14,7 @@ pub enum Error {
     INTERNALSERVERERROR,
     PRECODINTIONFAILED,
     BADGATEWAY,
+    LISTSTREAMS,
 }
 
 impl Error {

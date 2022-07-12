@@ -71,17 +71,17 @@ mod tests {
         println!("{}", "Listing streams".blue());
         let lp_stream = lp.stream.clone();
         let streams = lp.stream.list_streams().unwrap();
-        assert_eq!(type_of(streams.clone()), "serde_json::value::Value");
+        assert_eq!(type_of(streams.clone()), "alloc::vec::Vec<livepeer_client::data::stream::Stream>");
         println!("{}", "Success".green());
 
         // Get stream by id
         println!("{}", "Getting stream by id".blue());
-        if streams.clone().as_array().unwrap().len() > 0 {
-            let streams_array = streams.as_array().unwrap();
+        if streams.clone().len() > 0 {
+            let streams_array = streams;
             let stream = &streams_array[0];
-            let stream_id = stream["id"].as_str().unwrap();
+            let stream_id = &stream.id;
             let retrieved_stream = lp_stream.get_stream_by_id(stream_id.to_string()).unwrap();
-            assert_eq!(stream["id"], retrieved_stream["id"]);
+            assert_eq!(stream.id, retrieved_stream["id"]);
         }
         println!("{}", "Success".green());
 

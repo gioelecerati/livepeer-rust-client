@@ -62,6 +62,7 @@ fn main() {
 ### Live
 
 - [X] List streams   
+- [X] Get stream
 - [X] Push RTMP (linux only - ffmpeg dep)   
 
 

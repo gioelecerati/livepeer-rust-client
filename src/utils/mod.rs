@@ -23,7 +23,8 @@ impl SurfRequest {
             match response {
                 Ok(mut response) => match response.status() {
                     StatusCode::Ok => {
-                        let body = response.body_json::<serde_json::Value>().await.unwrap();
+                        let r = response.body_json::<serde_json::Value>().await.unwrap();
+                        let body = r;
                         res = Ok(body);
                     }
                     _ => {

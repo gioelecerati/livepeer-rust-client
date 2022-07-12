@@ -8,7 +8,7 @@ pub struct Stream {
 }
 
 impl crate::live::Stream for Stream {
-    fn list_streams(&self) -> Result<serde_json::Value, errors::Error> {
+    fn list_streams(&self) -> Result<crate::data::stream::Streams, errors::Error> {
         self.clone().list_streams()
     }
 
@@ -27,12 +27,17 @@ impl Stream {
 
     /// List all streams
     /// <https://docs.livepeer.com/api/live/streams.html#list-all-streams>
-    pub fn list_streams(self: Self) -> Result<serde_json::Value, errors::Error> {
+    pub fn list_streams(self: Self) -> Result<crate::data::stream::Streams, errors::Error> {
         let res: Result<serde_json::Value, errors::Error> = crate::utils::SurfRequest::get(
             format!("{}{}", self.client.config.host, "/api/stream"),
             self.client,
         );
-        res
+        let mut r: Result<crate::data::stream::Streams, errors::Error> = Err(errors::Error::LISTSTREAMS);
+        if res.is_ok(){
+            let streams = serde_json::from_value(res.unwrap()).unwrap();
+            r = Ok(streams)
+        } 
+        r
     }
 
     /// Get stream by id

@@ -5,6 +5,7 @@ pub mod tests;
 pub mod user;
 pub mod utils;
 pub mod vod;
+pub mod data;
 
 #[derive(Debug, Clone)]
 pub enum LivepeerEnv {
