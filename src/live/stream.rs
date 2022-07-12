@@ -32,11 +32,12 @@ impl Stream {
             format!("{}{}", self.client.config.host, "/api/stream"),
             self.client,
         );
-        let mut r: Result<crate::data::stream::Streams, errors::Error> = Err(errors::Error::LISTSTREAMS);
-        if res.is_ok(){
+        let mut r: Result<crate::data::stream::Streams, errors::Error> =
+            Err(errors::Error::LISTSTREAMS);
+        if res.is_ok() {
             let streams = serde_json::from_value(res.unwrap()).unwrap();
             r = Ok(streams)
-        } 
+        }
         r
     }
 

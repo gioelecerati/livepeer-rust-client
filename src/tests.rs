@@ -71,7 +71,10 @@ mod tests {
         println!("{}", "Listing streams".blue());
         let lp_stream = lp.stream.clone();
         let streams = lp.stream.list_streams().unwrap();
-        assert_eq!(type_of(streams.clone()), "alloc::vec::Vec<livepeer_client::data::stream::Stream>");
+        assert_eq!(
+            type_of(streams.clone()),
+            "alloc::vec::Vec<livepeer_client::data::stream::Stream>"
+        );
         println!("{}", "Success".green());
 
         // Get stream by id

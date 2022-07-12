@@ -2,7 +2,7 @@
 
 `0.0.1`
 
-Crate to interact with the `livepeer.com` API
+Crate to interact with the `Livepeer Studio` API
 
 ## Documentation
 

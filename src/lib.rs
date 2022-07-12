@@ -1,11 +1,11 @@
 pub mod api;
+pub mod data;
 pub mod errors;
 pub mod live;
 pub mod tests;
 pub mod user;
 pub mod utils;
 pub mod vod;
-pub mod data;
 
 #[derive(Debug, Clone)]
 pub enum LivepeerEnv {
