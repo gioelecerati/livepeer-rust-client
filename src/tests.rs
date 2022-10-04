@@ -18,7 +18,15 @@ mod tests {
         // Create a new Livepeer Client
         println!("{}", "Creating a new Livepeer Client".blue());
         let _api_token = std::env::var("LIVEPEER_API_TOKEN").unwrap_or_default();
-        let lp = Livepeer::new(None, Some(LivepeerEnv::Stg));
+        let _lp = Livepeer::new(None, Some(LivepeerEnv::Stg));
+
+        if _lp.is_err() {
+            println!("{}", "Error creating Livepeer Client".red());
+            assert!(false);
+        }
+
+        let lp = _lp.unwrap();
+        
         assert_eq!(lp._client.config.api_token, _api_token);
         println!("{}", "Success".green());
 
@@ -67,13 +75,17 @@ mod tests {
         assert_eq!(type_of(tasks.clone()), "serde_json::value::Value");
         println!("{}", "Success".green());
 
+        // Create stream
+        println!("{}", "Creating stream".blue());
+
         // List streams
         println!("{}", "Listing streams".blue());
         let lp_stream = lp.stream.clone();
         let streams = lp.stream.list_streams().unwrap();
+        let st = streams.clone();
         assert_eq!(
             type_of(streams.clone()),
-            "alloc::vec::Vec<livepeer_client::data::stream::Stream>"
+            "alloc::vec::Vec<livepeer_rs::data::stream::Stream>"
         );
         println!("{}", "Success".green());
 
@@ -104,13 +116,20 @@ mod tests {
         assert_eq!(imported_asset["task"]["id"], retrieved_task["id"]);
         println!("{}", "Success".green());
 
-        println!("{}", "Waiting for Import task to finish...".blue());
-        let task_completed = lp.task.clone().wait_for_task(task_id.to_string());
+        //println!("{}", "Waiting for Import task to finish...".blue());
+        //let task_completed = lp.task.clone().wait_for_task(task_id.to_string());
 
-        if !task_completed {
+        /*if !task_completed {
             panic!("The import task has failed");
         } else {
             println!("{}", "Success".green());
-        }
+        }*/
+
+        let stream_key = st[1].clone().stream_key.unwrap();
+        // push to rtmp endpoint
+        lp.rtmp.push(
+            &stream_key.to_string(),
+            &"/home/gioele/Downloads/bbbx3_720_2s.mp4".to_string(),
+        )
     }
 }

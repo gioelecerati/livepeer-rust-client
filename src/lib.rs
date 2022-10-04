@@ -82,7 +82,7 @@ impl Livepeer {
     /// * `api_token` - User API token
     /// * `env` - Livepeer Environment
     /// # Example
-    pub fn new(api_token: Option<String>, env: Option<LivepeerEnv>) -> Livepeer {
+    pub fn new(api_token: Option<String>, env: Option<LivepeerEnv>) -> Result<Livepeer, String> {
         let mut _api_token = String::new();
         if api_token.is_some() {
             _api_token = api_token.unwrap();
@@ -91,7 +91,14 @@ impl Livepeer {
             _api_token = std::env::var("LIVEPEER_API_TOKEN").unwrap_or_default();
         }
         let client = LivepeerClient::new(_api_token.clone(), env.clone());
-        Livepeer {
+
+        let user_info = user::User::new(&client);
+
+        if user_info.is_err() {
+            return Err(user_info.err().unwrap());
+        }
+
+        Ok(Livepeer {
             _client: client.clone(),
             _env: env.clone().unwrap_or(LivepeerEnv::Dev),
             asset: vod::api::VodApi::new(&client),
@@ -100,7 +107,7 @@ impl Livepeer {
             rtmp: live::rtmp::Rtmp {
                 client: client.clone(),
             },
-            user: user::User::new(&client),
-        }
+            user: user_info.unwrap(),
+        })
     }
 }
