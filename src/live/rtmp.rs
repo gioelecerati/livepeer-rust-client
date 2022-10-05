@@ -275,7 +275,7 @@ impl Rtmp {
     }
 
     /// Temp ffmpeg command spawn. TODO: Replace with a proper library.
-    pub fn push_to_region(self: &Self, stream_key: &String, file_path: &String, region: &String) {
+    pub fn push_to_region(self: &Self, stream_key: &String, file_path: &String, region: &String, ffmpeg_path: &String) {
         let mut _region_url = String::new();
 
         if region != "none" {
@@ -289,7 +289,7 @@ impl Rtmp {
         }
 
         // spawn ffmpeg command
-        let mut cmd = std::process::Command::new("ffmpeg");
+        let mut cmd = std::process::Command::new(ffmpeg_path);
         cmd.arg("-re")
             .arg("-i")
             .arg(file_path)
