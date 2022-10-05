@@ -13,6 +13,7 @@ pub enum LivepeerEnv {
     Dev,
     Stg,
     Prod,
+    Origin,
 }
 
 #[derive(Debug, Clone)]
@@ -60,6 +61,7 @@ impl LivepeerClient {
             Some(LivepeerEnv::Dev) => "http://localhost:3004",
             Some(LivepeerEnv::Stg) => "https://livepeer.monster",
             Some(LivepeerEnv::Prod) => "https://livepeer.com",
+            Some(LivepeerEnv::Origin) => "https://origin.livepeer.com",
             None => "https://livepeer.monster",
         };
 
@@ -67,6 +69,7 @@ impl LivepeerClient {
             Some(LivepeerEnv::Dev) => "rtmp://127.0.0.1:1935/live",
             Some(LivepeerEnv::Stg) => "rtmp://rtmp.livepeer.monster/live",
             Some(LivepeerEnv::Prod) => "rtmp://rtmp.livepeer.com/live",
+            Some(LivepeerEnv::Origin) => "rtmp://rtmp.livepeer.com/live",
             None => "rtmp://livepeer.monster",
         };
 
