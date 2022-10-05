@@ -4,6 +4,7 @@
 mod tests {
     use crate::vod::Task;
     use crate::vod::Vod;
+    use crate::accesscontrol::AccessControl;
     use crate::*;
 
     use colored::*;
@@ -44,28 +45,6 @@ mod tests {
             let asset_id = asset["id"].as_str().unwrap();
             let retrieved_asset = lp.asset.get_asset_by_id(asset_id.to_string()).unwrap();
             assert_eq!(asset["id"], retrieved_asset["id"]);
-        }
-        println!("{}", "Success".green());
-
-        // Update asset
-        println!("{}", "Updating asset".blue());
-        if assets.clone().as_array().unwrap().len() > 0 {
-            let assets_array = assets.as_array().unwrap();
-            let asset = &assets_array[0];
-            let asset_id = asset["id"].as_str().unwrap();
-            let retrieved_asset = lp.asset.get_asset_by_id(asset_id.to_string()).unwrap();
-            let updated_asset = lp
-                .asset
-                .update_asset(
-                    retrieved_asset["id"].as_str().unwrap().to_string(),
-                    "updated_name".to_string(),
-                    Some(serde_json::json!({})),
-                    Some(serde_json::json!({
-                        "ipfs":{}
-                    })),
-                )
-                .unwrap();
-            assert_eq!(updated_asset["name"], "updated_name");
         }
         println!("{}", "Success".green());
 
@@ -116,20 +95,15 @@ mod tests {
         assert_eq!(imported_asset["task"]["id"], retrieved_task["id"]);
         println!("{}", "Success".green());
 
-        //println!("{}", "Waiting for Import task to finish...".blue());
-        //let task_completed = lp.task.clone().wait_for_task(task_id.to_string());
+        // Create signing key
+        println!("{}", "Creating signing key".blue());
+        let signing_key = lp.access_control.create_signing_key(String::new());
+        assert!(signing_key.is_ok());
 
-        /*if !task_completed {
-            panic!("The import task has failed");
-        } else {
-            println!("{}", "Success".green());
-        }*/
-
-        let stream_key = st[1].clone().stream_key.unwrap();
-        // push to rtmp endpoint
-        lp.rtmp.push(
-            &stream_key.to_string(),
-            &"/home/gioele/Downloads/bbbx3_720_2s.mp4".to_string(),
-        )
+        // List signing keys
+        println!("{}", "Listing signing keys".blue());
+        let signing_keys = lp.access_control.list_signing_keys();
+        assert!(signing_keys.is_ok());
+        
     }
 }

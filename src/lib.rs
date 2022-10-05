@@ -6,6 +6,7 @@ pub mod tests;
 pub mod user;
 pub mod utils;
 pub mod vod;
+pub mod accesscontrol;
 
 #[derive(Debug, Clone)]
 pub enum LivepeerEnv {
@@ -37,6 +38,8 @@ pub struct Livepeer {
     _env: LivepeerEnv,
     /// Vod API set
     pub asset: vod::api::VodApi,
+    /// Access Control API set
+    pub access_control: accesscontrol::api::AccessControlApi,
     /// Task API set
     pub task: vod::task::TaskApi,
     /// Rtmp push utils
@@ -103,6 +106,7 @@ impl Livepeer {
             _env: env.clone().unwrap_or(LivepeerEnv::Dev),
             asset: vod::api::VodApi::new(&client),
             task: vod::task::TaskApi::new(&client),
+            access_control: accesscontrol::api::AccessControlApi::new(&client),
             stream: live::stream::Stream::new(&client),
             rtmp: live::rtmp::Rtmp {
                 client: client.clone(),

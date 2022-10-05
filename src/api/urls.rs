@@ -3,6 +3,7 @@ pub struct LivepeerUrls {
     pub vod: VodUrls,
     pub task: TaskUrls,
     pub auth: AuthUrls,
+    pub access_control: AccessControlUrls,
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -11,6 +12,11 @@ pub struct VodUrls {
     pub import_asset: &'static str,
     pub get_presigned_url: &'static str,
     pub export: &'static str,
+}
+
+#[derive(Debug, Clone, Copy)]
+pub struct AccessControlUrls {
+    pub signing_key: &'static str,
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -42,7 +48,11 @@ impl LivepeerUrls {
             info: "api/user/me",
         };
 
-        let urls = LivepeerUrls { vod, task, auth };
+        let access_control = AccessControlUrls {
+            signing_key: "/api/access-control/signing-key",
+        };
+
+        let urls = LivepeerUrls { vod, task, auth, access_control };
         urls
     }
 }

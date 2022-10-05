@@ -40,11 +40,9 @@ impl crate::vod::Vod for VodApi {
     fn update_asset(
         &self,
         asset_id: String,
-        name: String,
-        meta: Option<serde_json::Value>,
-        storage: Option<serde_json::Value>,
+        payload: serde_json::Value,
     ) -> Result<serde_json::Value, errors::Error> {
-        self.clone()._update_asset(asset_id, name, meta, storage)
+        self.clone()._update_asset(asset_id, payload)
     }
 
     fn export_to_ipfs(
@@ -174,20 +172,14 @@ impl VodApi {
     pub fn _update_asset(
         self: Self,
         asset_id: String,
-        name: String,
-        meta: Option<serde_json::Value>,
-        storage: Option<serde_json::Value>,
+        payload: serde_json::Value
     ) -> Result<serde_json::Value, errors::Error> {
         let res: Result<serde_json::Value, errors::Error> = crate::utils::SurfRequest::patch(
             format!(
                 "{}{}/{}",
                 self.client.config.host, self.urls.vod.assets, asset_id
             ),
-            serde_json::json!({
-                "name": name,
-                "meta": meta,
-                "storage": storage
-            })
+            serde_json::json!(payload)
             .to_string(),
             self.client,
         );

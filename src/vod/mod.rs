@@ -16,9 +16,7 @@ pub trait Vod {
     fn update_asset(
         &self,
         asset_id: String,
-        name: String,
-        meta: Option<serde_json::Value>,
-        storage: Option<serde_json::Value>,
+        payload: serde_json::Value
     ) -> Result<serde_json::Value, crate::errors::Error>;
     fn import_asset(
         &self,
