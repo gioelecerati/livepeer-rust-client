@@ -29,7 +29,7 @@ impl Stream {
     /// <https://docs.livepeer.com/api/live/streams.html#list-all-streams>
     pub fn list_streams(self: Self) -> Result<crate::data::stream::Streams, errors::Error> {
         let res: Result<serde_json::Value, errors::Error> = crate::utils::SurfRequest::get(
-            format!("{}{}", self.client.config.host, "/api/stream"),
+            format!("{}{}", self.client.config.host, "/api/stream?streamsonly=1"),
             self.client,
         );
         let mut r: Result<crate::data::stream::Streams, errors::Error> =
