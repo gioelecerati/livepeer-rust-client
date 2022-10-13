@@ -275,8 +275,18 @@ impl Rtmp {
     }
 
     /// Temp ffmpeg command spawn. TODO: Replace with a proper library.
-    pub fn push_to_region(self: &Self, stream_key: &String, file_path: &String, region: &String, ffmpeg_path: &String) {
+    pub fn push_to_region(self: &Self, stream_key: &String, file_path: &String, region: &String, ffmpeg_path: &String, proc_id: &mut Option<String>) {
         let mut _region_url = String::new();
+
+        let mut pid = String::new();
+
+        if proc_id.is_none() {
+            pid = format!("{:x}", rand::random::<u32>())
+        }else{
+            pid = proc_id.clone().unwrap();
+        }
+
+        let title = pid;
 
         if region != "none" {
             _region_url = self
@@ -293,6 +303,8 @@ impl Rtmp {
         cmd.arg("-re")
             .arg("-i")
             .arg(file_path)
+            .arg("-metadata")
+            .arg(format!("title={}", title))
             .arg("-c:v")
             .arg("copy")
             .arg("-c:a")

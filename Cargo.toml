@@ -12,3 +12,4 @@ async-std = { version = "1.8.0", features = ["attributes"] }
 serde = { version = "1.0", features = ["derive"] }
 colored = "2.0.0"
 ffmpeg-next = "5.0.3"
+rand = "0.8.3"
