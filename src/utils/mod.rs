@@ -131,8 +131,8 @@ impl SurfRequest {
             match response {
                 Ok(mut response) => match response.status() {
                     StatusCode::Ok | StatusCode::Created | StatusCode::NoContent => {
-                        let body = response.body_json::<serde_json::Value>().await.unwrap();
-                        res = Ok(body);
+                        //let body = response.body_json::<serde_json::Value>().await.unwrap();
+                        res = Ok(serde_json::Value::Null);
                     }
                     _ => {
                         println!("Error on API DELETE with status code: {}", response.status());
