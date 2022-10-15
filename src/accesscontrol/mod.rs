@@ -6,4 +6,8 @@ pub trait AccessControl {
         &self,
         name: String,
     ) -> Result<serde_json::Value, crate::errors::Error>;
+    fn delete_signing_key(
+        &self,
+        id: String,
+    ) -> Result<serde_json::Value, crate::errors::Error>;
 }

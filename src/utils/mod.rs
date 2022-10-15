@@ -113,4 +113,38 @@ impl SurfRequest {
         });
         return res;
     }
+
+    pub fn delete(
+        url: String,
+        client: crate::LivepeerClient,
+    ) -> Result<serde_json::Value, errors::Error> {
+        let mut res: Result<serde_json::Value, errors::Error> = Err(errors::Error::UNKNOWN);
+
+        async_std::task::block_on(async {
+            let response = surf::delete(&format!("{}", url))
+                .header(
+                    "Authorization",
+                    format!("Bearer {}", client.config.api_token),
+                )
+                .await;
+
+            match response {
+                Ok(mut response) => match response.status() {
+                    StatusCode::Ok | StatusCode::Created | StatusCode::NoContent => {
+                        let body = response.body_json::<serde_json::Value>().await.unwrap();
+                        res = Ok(body);
+                    }
+                    _ => {
+                        println!("Error on API DELETE with status code: {}", response.status());
+                        let err = errors::Error::from_response(&response);
+                        res = Err(err);
+                    }
+                },
+                Err(e) => {
+                    println!("{:?}", e);
+                }
+            }
+        });
+        return res;
+    }
 }

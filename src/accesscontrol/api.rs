@@ -17,6 +17,12 @@ impl crate::accesscontrol::AccessControl for AccessControlApi {
         name: String,
     ) -> Result<serde_json::Value, errors::Error> {
         self.clone()._create_signing_key(name)
+    }   
+    fn delete_signing_key(
+        &self,
+        id: String,
+    ) -> Result<serde_json::Value, errors::Error> {
+        self.clone()._delete_signing_key(id)
     }
 }
 
@@ -48,6 +54,20 @@ impl AccessControlApi {
                 "name": name
             })
             .to_string(),
+            self.client,
+        );
+        res
+    }
+
+    pub fn _delete_signing_key(
+        self: Self,
+        id: String,
+    ) -> Result<serde_json::Value, errors::Error> {
+        let res: Result<serde_json::Value, errors::Error> = crate::utils::SurfRequest::delete(
+            format!(
+                "{}{}/{}",
+                self.client.config.host, self.urls.access_control.signing_key, id
+            ),
             self.client,
         );
         res
