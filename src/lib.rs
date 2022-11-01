@@ -67,10 +67,10 @@ impl LivepeerClient {
 
         let rtmp_endpoint = match env {
             Some(LivepeerEnv::Dev) => "rtmp://127.0.0.1:1935/live",
-            Some(LivepeerEnv::Stg) => "rtmp://rtmp.livepeer.monster/live",
+            Some(LivepeerEnv::Stg) => "rtmp://rtmp.livepeer.monster:11935/live",
             Some(LivepeerEnv::Prod) => "rtmp://rtmp.livepeer.com/live",
             Some(LivepeerEnv::Origin) => "rtmp://rtmp.livepeer.com/live",
-            None => "rtmp://livepeer.monster",
+            None => "rtmp://rtmp.livepeer.monster:11935/live",
         };
 
         let config = LivepeerConfig {
