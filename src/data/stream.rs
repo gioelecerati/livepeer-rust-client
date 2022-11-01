@@ -32,6 +32,14 @@ pub struct Stream {
     pub playback_id: Option<String>,
     pub stream_key: Option<String>,
     pub created_by_token_name: Option<String>,
+    pub playback_policy: Option<PlaybackPolicy>,
+}
+
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PlaybackPolicy {
+    #[serde(rename = "type")]
+    pub rtype: String
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
