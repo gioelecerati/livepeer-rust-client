@@ -72,7 +72,7 @@ impl LivepeerClient {
             Some(LivepeerEnv::Stg) => "rtmp://rtmp.livepeer.monster:11935/live",
             Some(LivepeerEnv::Prod) => "rtmp://rtmp.livepeer.com/live",
             Some(LivepeerEnv::Origin) => "rtmp://rtmp.livepeer.com/live",
-            Some(LivepeerEnv::Sin) => "rtmp://sin-playback.lp-playback.studio/live",
+            Some(LivepeerEnv::Sin) => "rtmp://sin-rtmp.livepeer.com/live",
             None => "rtmp://rtmp.livepeer.monster:11935/live",
         };
 
