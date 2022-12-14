@@ -47,22 +47,7 @@ fn main() {
 }
 ```
 
-## Available methods
-
-### On Demand
-
-- [X] List VOD assets   
-- [X] Get VOD asset   
-- [X] Update VOD asset
-- [X] List VOD tasks   
-- [X] Direct Upload   
-- [X] Import from external URL   
-- [X] Generate presigned URL   
-
-### Live
-
-- [X] List streams   
-- [X] Get stream
-- [X] Push RTMP (linux only - ffmpeg dep)   
+## Docs
+https://docs.rs/crate/livepeer-rs/latest  
 
 
