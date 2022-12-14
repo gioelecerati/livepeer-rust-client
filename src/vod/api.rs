@@ -29,6 +29,10 @@ impl crate::vod::Vod for VodApi {
         self.clone()._get_asset_by_id(asset_id)
     }
 
+    fn get_assets_by_user_id(&self, user_id: String) -> Result<serde_json::Value, errors::Error> {
+        self.clone()._get_assets_by_user_id(user_id)
+    }
+
     fn import_asset(
         &self,
         video_file_path: String,
@@ -85,6 +89,21 @@ impl VodApi {
             format!(
                 "{}{}/{}",
                 self.client.config.host, self.urls.vod.assets, asset_id
+            ),
+            self.client,
+        );
+        res
+    }
+
+    /// Get assets by user id
+    pub fn _get_assets_by_user_id(
+        self: Self,
+        user_id: String,
+    ) -> Result<serde_json::Value, errors::Error> {
+        let res: Result<serde_json::Value, errors::Error> = crate::utils::SurfRequest::get(
+            format!(
+                r#"{}{}?all=true&allUsers=true&filters=[{{"id":"userId","value":"{}"}}]"#,
+                self.client.config.host, self.urls.vod.assets, user_id
             ),
             self.client,
         );

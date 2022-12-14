@@ -13,6 +13,7 @@ pub trait Vod {
         file_path: String,
     ) -> Result<(), crate::errors::Error>;
     fn get_asset_by_id(&self, asset_id: String) -> Result<serde_json::Value, crate::errors::Error>;
+    fn get_assets_by_user_id(&self, user_id: String) -> Result<serde_json::Value, crate::errors::Error>;
     fn update_asset(
         &self,
         asset_id: String,
@@ -32,4 +33,13 @@ pub trait Vod {
 
 pub trait Task {
     fn list_tasks(&self) -> Result<serde_json::Value, crate::errors::Error>;
+    fn get_task_by_output_asset_id(
+        &self,
+        output_asset_id: String,
+    ) -> Result<serde_json::Value, crate::errors::Error>;
+    fn get_tasks_by_user_id(
+        &self,
+        user_id: String,
+    ) -> Result<serde_json::Value, crate::errors::Error>;
+    fn get_task_by_id(&self, task_id: String) -> Result<serde_json::Value, crate::errors::Error>;
 }

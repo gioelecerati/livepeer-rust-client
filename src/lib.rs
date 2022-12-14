@@ -1,3 +1,7 @@
+#![allow(dead_code)]
+#![allow(unused_variables)]
+#![allow(warnings)]
+
 pub mod api;
 pub mod data;
 pub mod errors;
@@ -44,11 +48,13 @@ pub struct Livepeer {
     pub access_control: accesscontrol::api::AccessControlApi,
     /// Task API set
     pub task: vod::task::TaskApi,
+    /// User API set
+    pub user_api: user::UserApi,
     /// Rtmp push utils
     pub rtmp: live::rtmp::Rtmp,
     /// Stream API set
     pub stream: live::stream::Stream,
-    /// User API set
+    /// User Infos
     pub user: user::User,
 }
 
@@ -112,6 +118,7 @@ impl Livepeer {
             _env: env.clone().unwrap_or(LivepeerEnv::Dev),
             asset: vod::api::VodApi::new(&client),
             task: vod::task::TaskApi::new(&client),
+            user_api: user::UserApi::new(&client),
             access_control: accesscontrol::api::AccessControlApi::new(&client),
             stream: live::stream::Stream::new(&client),
             rtmp: live::rtmp::Rtmp {
