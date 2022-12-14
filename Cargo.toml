@@ -6,6 +6,9 @@ description = "Lens Protocol API client"
 license = "MIT"
 repository = "https://github.com/gioelecerati/livepeer-rs"
 readme = "README.md"
+exclude = [
+    ".cargo_vcs_info.json"
+]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
