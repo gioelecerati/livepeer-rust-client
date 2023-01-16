@@ -275,7 +275,7 @@ impl Rtmp {
     }
 
     /// Temp ffmpeg command spawn. TODO: Replace with a proper library.
-    pub fn push_to_region(self: &Self, stream_key: &String, file_path: &String, region: &String, ffmpeg_path: &String, proc_id: &mut Option<String>) {
+    pub fn push_to_region(self: &Self, stream_key: &String, file_path: &String, region: &String, ffmpeg_path: &String, proc_id: &mut Option<String>) -> Result<String,String> {
         let mut _region_url = String::new();
 
         let mut pid = String::new();
@@ -311,10 +311,16 @@ impl Rtmp {
             .arg("copy")
             .arg("-f")
             .arg("flv")
-            .arg(format!("{}/{}", _region_url, stream_key));
-        println!("{:?}", cmd);
+            .arg(format!("{}/{}", _region_url, stream_key))
+            .stdout(std::process::Stdio::inherit())
+            .stderr(std::process::Stdio::inherit());
         let output = cmd.output().expect("failed to execute process");
-        println!("status: {}", output.status);
-        println!("stdout: {}", String::from_utf8_lossy(&output.stdout));
+        let stderr = String::from_utf8_lossy(&output.stderr);
+
+        if output.status.to_string() != "exit status: 0" {
+            return Err(output.status.to_string());
+        }else{
+            return Ok(output.status.to_string());
+        }
     }
 }

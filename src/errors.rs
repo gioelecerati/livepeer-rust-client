@@ -15,6 +15,7 @@ pub enum Error {
     PRECODINTIONFAILED,
     BADGATEWAY,
     LISTSTREAMS,
+    CREATESTREAM,
 }
 
 impl Error {

@@ -9,6 +9,7 @@ pub type Streams = Vec<Stream>;
 pub struct Stream {
     pub created_at: i64,
     pub id: String,
+    pub deleted: Option<bool>,
     pub ingest_rate: Option<f64>,
     pub is_active: bool,
     pub kind: String,
