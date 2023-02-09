@@ -191,15 +191,14 @@ impl VodApi {
     pub fn _update_asset(
         self: Self,
         asset_id: String,
-        payload: serde_json::Value
+        payload: serde_json::Value,
     ) -> Result<serde_json::Value, errors::Error> {
         let res: Result<serde_json::Value, errors::Error> = crate::utils::SurfRequest::patch(
             format!(
                 "{}{}/{}",
                 self.client.config.host, self.urls.vod.assets, asset_id
             ),
-            serde_json::json!(payload)
-            .to_string(),
+            serde_json::json!(payload).to_string(),
             self.client,
         );
         res

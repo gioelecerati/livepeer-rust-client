@@ -2,15 +2,16 @@
 #![allow(unused_variables)]
 #![allow(warnings)]
 
+pub mod accesscontrol;
 pub mod api;
 pub mod data;
 pub mod errors;
 pub mod live;
+pub mod playback;
 pub mod tests;
 pub mod user;
 pub mod utils;
 pub mod vod;
-pub mod accesscontrol;
 
 #[derive(Debug, Clone)]
 pub enum LivepeerEnv {
@@ -56,6 +57,8 @@ pub struct Livepeer {
     pub stream: live::stream::Stream,
     /// User Infos
     pub user: user::User,
+    /// Playback Info
+    pub playback: playback::api::PlaybackApi,
 }
 
 impl LivepeerClient {
@@ -125,6 +128,7 @@ impl Livepeer {
                 client: client.clone(),
             },
             user: user_info.unwrap(),
+            playback: playback::api::PlaybackApi::new(&client),
         })
     }
 }

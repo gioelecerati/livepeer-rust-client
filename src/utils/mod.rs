@@ -135,7 +135,10 @@ impl SurfRequest {
                         res = Ok(serde_json::Value::Null);
                     }
                     _ => {
-                        println!("Error on API DELETE with status code: {}", response.status());
+                        println!(
+                            "Error on API DELETE with status code: {}",
+                            response.status()
+                        );
                         let err = errors::Error::from_response(&response);
                         res = Err(err);
                     }

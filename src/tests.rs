@@ -2,9 +2,9 @@
 
 #[cfg(test)]
 mod tests {
+    use crate::accesscontrol::AccessControl;
     use crate::vod::Task;
     use crate::vod::Vod;
-    use crate::accesscontrol::AccessControl;
     use crate::*;
 
     use colored::*;
@@ -27,7 +27,7 @@ mod tests {
         }
 
         let lp = _lp.unwrap();
-        
+
         assert_eq!(lp._client.config.api_token, _api_token);
         println!("{}", "Success".green());
 
@@ -104,6 +104,5 @@ mod tests {
         println!("{}", "Listing signing keys".blue());
         let signing_keys = lp.access_control.list_signing_keys();
         assert!(signing_keys.is_ok());
-        
     }
 }

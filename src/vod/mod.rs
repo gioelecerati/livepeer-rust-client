@@ -13,11 +13,14 @@ pub trait Vod {
         file_path: String,
     ) -> Result<(), crate::errors::Error>;
     fn get_asset_by_id(&self, asset_id: String) -> Result<serde_json::Value, crate::errors::Error>;
-    fn get_assets_by_user_id(&self, user_id: String) -> Result<serde_json::Value, crate::errors::Error>;
+    fn get_assets_by_user_id(
+        &self,
+        user_id: String,
+    ) -> Result<serde_json::Value, crate::errors::Error>;
     fn update_asset(
         &self,
         asset_id: String,
-        payload: serde_json::Value
+        payload: serde_json::Value,
     ) -> Result<serde_json::Value, crate::errors::Error>;
     fn import_asset(
         &self,

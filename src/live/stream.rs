@@ -16,11 +16,18 @@ impl crate::live::Stream for Stream {
         self.clone().get_stream_by_id(stream_id)
     }
 
-    fn get_streams_by_user_id(&self, user_id: String) -> Result<crate::data::stream::Streams, errors::Error> {
+    fn get_streams_by_user_id(
+        &self,
+        user_id: String,
+    ) -> Result<crate::data::stream::Streams, errors::Error> {
         self.clone().get_streams_by_user_id(user_id)
     }
 
-    fn create_stream(&self, name: &String, profiles: &Vec<crate::data::stream::Profile>) -> Result<String, errors::Error> {
+    fn create_stream(
+        &self,
+        name: &String,
+        profiles: &Vec<crate::data::stream::Profile>,
+    ) -> Result<String, errors::Error> {
         self.clone().create_stream(name, profiles)
     }
 }
@@ -90,8 +97,8 @@ impl Stream {
         self: Self,
         name: &String,
         profiles: &Vec<crate::data::stream::Profile>,
-    ) ->  Result<String, errors::Error> {
-        let mut result: Result<String,  errors::Error> = Err(errors::Error::CREATESTREAM);
+    ) -> Result<String, errors::Error> {
+        let mut result: Result<String, errors::Error> = Err(errors::Error::CREATESTREAM);
         let mut stream_id: String = "".to_string();
         let mut data = serde_json::json!({
             "name": name,

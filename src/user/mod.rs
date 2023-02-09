@@ -1,4 +1,4 @@
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone)]
 pub struct User {
@@ -24,17 +24,20 @@ impl UserTrait for UserApi {
 }
 
 impl UserApi {
-
     pub fn new(client: &crate::LivepeerClient) -> Self {
         UserApi {
             client: client.clone(),
             urls: crate::api::urls::LivepeerUrls::new(),
         }
     }
-    
+
     pub fn _get_user_info_by_id(&self, user_id: String) -> Result<serde_json::Value, String> {
         let response = crate::utils::SurfRequest::get(
-            format!("{}{}", self.client.config.host, format!("/api/user/{}", user_id)),
+            format!(
+                "{}{}",
+                self.client.config.host,
+                format!("/api/user/{}", user_id)
+            ),
             self.client.clone(),
         );
 
@@ -45,7 +48,6 @@ impl UserApi {
         }
     }
 }
-
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -64,7 +66,6 @@ pub struct UserInfo {
     pub stripe_customer_id: String,
     pub stripe_customer_subscription_id: String,
 }
-
 
 impl User {
     pub fn new(client: &crate::LivepeerClient) -> Result<Self, String> {
@@ -86,7 +87,6 @@ impl User {
 
 /// Get the user id from the API
 pub fn get_user_info(client: &crate::LivepeerClient) -> Result<UserInfo, String> {
-
     let response: Result<serde_json::Value, crate::errors::Error> = crate::utils::SurfRequest::get(
         format!("{}{}", client.config.host, "/api/user/me"),
         client.clone(),
@@ -99,9 +99,11 @@ pub fn get_user_info(client: &crate::LivepeerClient) -> Result<UserInfo, String>
     }
 }
 
-/// Get user info by user_id 
-pub fn get_user_info_by_id(client: &crate::LivepeerClient, user_id: String) -> Result<UserInfo, String> {
-
+/// Get user info by user_id
+pub fn get_user_info_by_id(
+    client: &crate::LivepeerClient,
+    user_id: String,
+) -> Result<UserInfo, String> {
     let response: Result<serde_json::Value, crate::errors::Error> = crate::utils::SurfRequest::get(
         format!("{}{}", client.config.host, format!("/api/user/{}", user_id)),
         client.clone(),

@@ -12,7 +12,10 @@ impl crate::vod::Task for TaskApi {
         self.clone()._list_tasks()
     }
 
-    fn get_task_by_output_asset_id(&self, asset_id: String) -> Result<serde_json::Value, errors::Error> {
+    fn get_task_by_output_asset_id(
+        &self,
+        asset_id: String,
+    ) -> Result<serde_json::Value, errors::Error> {
         self.clone()._get_task_by_output_asset_id(asset_id)
     }
 

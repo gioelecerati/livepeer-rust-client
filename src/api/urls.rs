@@ -4,6 +4,7 @@ pub struct LivepeerUrls {
     pub task: TaskUrls,
     pub auth: AuthUrls,
     pub access_control: AccessControlUrls,
+    pub playback: PlaybackUrls,
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -30,6 +31,11 @@ pub struct AuthUrls {
     pub info: &'static str,
 }
 
+#[derive(Debug, Clone, Copy)]
+pub struct PlaybackUrls {
+    pub get_playback_info: &'static str,
+}
+
 impl LivepeerUrls {
     pub fn new() -> Self {
         let vod = VodUrls {
@@ -52,7 +58,17 @@ impl LivepeerUrls {
             signing_key: "/api/access-control/signing-key",
         };
 
-        let urls = LivepeerUrls { vod, task, auth, access_control };
+        let playback = PlaybackUrls {
+            get_playback_info: "/api/playback",
+        };
+
+        let urls = LivepeerUrls {
+            vod,
+            task,
+            auth,
+            access_control,
+            playback,
+        };
         urls
     }
 }

@@ -40,7 +40,7 @@ pub struct Stream {
 #[serde(rename_all = "camelCase")]
 pub struct PlaybackPolicy {
     #[serde(rename = "type")]
-    pub rtype: String
+    pub rtype: String,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]

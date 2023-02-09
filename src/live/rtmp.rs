@@ -40,7 +40,7 @@ impl Transcoder {
         let mut encoder = codec::context::Context::from_parameters(ost.parameters())?
             .encoder()
             .video()?;
-        let fps = Some(ffmpeg_next::util::rational::Rational::new(30,30));
+        let fps = Some(ffmpeg_next::util::rational::Rational::new(30, 30));
         let width = decoder.width();
         println!("FPS {:?}", fps);
         println!("Width {:?}", width);
@@ -192,7 +192,9 @@ impl Rtmp {
                         &ist,
                         &mut octx,
                         ost_index as _,
-                        parse_opts(DEFAULT_X264_OPTS.to_string()).to_owned().unwrap(),
+                        parse_opts(DEFAULT_X264_OPTS.to_string())
+                            .to_owned()
+                            .unwrap(),
                         true,
                     )
                     .unwrap(),
@@ -275,14 +277,21 @@ impl Rtmp {
     }
 
     /// Temp ffmpeg command spawn. TODO: Replace with a proper library.
-    pub fn push_to_region(self: &Self, stream_key: &String, file_path: &String, region: &String, ffmpeg_path: &String, proc_id: &mut Option<String>) -> Result<String,String> {
+    pub fn push_to_region(
+        self: &Self,
+        stream_key: &String,
+        file_path: &String,
+        region: &String,
+        ffmpeg_path: &String,
+        proc_id: &mut Option<String>,
+    ) -> Result<String, String> {
         let mut _region_url = String::new();
 
         let mut pid = String::new();
 
         if proc_id.is_none() {
             pid = format!("{:x}", rand::random::<u32>())
-        }else{
+        } else {
             pid = proc_id.clone().unwrap();
         }
 
@@ -319,7 +328,7 @@ impl Rtmp {
 
         if output.status.to_string() != "exit status: 0" {
             return Err(output.status.to_string());
-        }else{
+        } else {
             return Ok(output.status.to_string());
         }
     }
