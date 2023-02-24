@@ -16,6 +16,7 @@ pub trait Vod {
     fn get_asset_by_playback_id(
         &self,
         playback_id: String,
+        admin: bool,
     ) -> Result<serde_json::Value, crate::errors::Error>;
     fn get_assets_by_user_id(
         &self,

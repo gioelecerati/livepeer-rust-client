@@ -32,8 +32,9 @@ impl crate::vod::Vod for VodApi {
     fn get_asset_by_playback_id(
         &self,
         playback_id: String,
+        admin: bool
     ) -> Result<serde_json::Value, errors::Error> {
-        self.clone()._get_asset_by_playback_id(playback_id)
+        self.clone()._get_asset_by_playback_id(playback_id, admin)
     }
 
     fn get_assets_by_user_id(&self, user_id: String) -> Result<serde_json::Value, errors::Error> {
@@ -105,11 +106,16 @@ impl VodApi {
     pub fn _get_asset_by_playback_id(
         self: Self,
         playback_id: String,
+        admin: bool
     ) -> Result<serde_json::Value, errors::Error> {
+        let mut admin_string = String::new();
+        if admin {
+            admin_string = String::from("&allUsers=true&all=true");
+        }
         let res: Result<serde_json::Value, errors::Error> = crate::utils::SurfRequest::get(
             format!(
-                "{}{}?playbackId={}",
-                self.client.config.host, self.urls.vod.assets, playback_id
+                "{}{}?playbackId={}{}",
+                self.client.config.host, self.urls.vod.assets, playback_id, admin_string
             ),
             self.client,
         );
