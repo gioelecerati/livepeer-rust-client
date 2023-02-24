@@ -18,6 +18,11 @@ pub trait Vod {
         playback_id: String,
         admin: bool,
     ) -> Result<serde_json::Value, crate::errors::Error>;
+    fn get_assets_by_cid(
+        &self,
+        cid: String,
+        admin: bool,
+    ) -> Result<serde_json::Value, crate::errors::Error>;
     fn get_assets_by_user_id(
         &self,
         user_id: String,
