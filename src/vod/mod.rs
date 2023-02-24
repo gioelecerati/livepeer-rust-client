@@ -13,6 +13,10 @@ pub trait Vod {
         file_path: String,
     ) -> Result<(), crate::errors::Error>;
     fn get_asset_by_id(&self, asset_id: String) -> Result<serde_json::Value, crate::errors::Error>;
+    fn get_asset_by_playback_id(
+        &self,
+        playback_id: String,
+    ) -> Result<serde_json::Value, crate::errors::Error>;
     fn get_assets_by_user_id(
         &self,
         user_id: String,
