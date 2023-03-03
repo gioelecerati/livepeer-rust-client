@@ -13,6 +13,10 @@ impl crate::vod::Vod for VodApi {
         self.clone()._get_assets()
     }
 
+    fn list_paginated_assets(&self, limit: usize, start: usize, details: bool) -> Result<serde_json::Value, errors::Error> {
+        self.clone()._get_paginated_assets(limit, start, details)
+    }
+
     fn get_presigned_url(&self, video_name: String) -> Result<serde_json::Value, errors::Error> {
         self.clone()._get_presigned_url(video_name)
     }
@@ -89,6 +93,18 @@ impl VodApi {
     pub fn _get_assets(self: Self) -> Result<serde_json::Value, errors::Error> {
         let res: Result<serde_json::Value, errors::Error> = crate::utils::SurfRequest::get(
             format!("{}{}", self.client.config.host, self.urls.vod.assets),
+            self.client,
+        );
+        res
+    }
+
+    pub fn _get_paginated_assets(self: Self, limit: usize, start: usize, details: bool) -> Result<serde_json::Value, errors::Error> {
+        let mut dtls = 0;
+        if details {
+            dtls = 1;
+        }
+        let res: Result<serde_json::Value, errors::Error> = crate::utils::SurfRequest::get(
+            format!("{}{}?limit={}&cursor=skip{}&details={}", self.client.config.host, self.urls.vod.assets, limit, start, dtls),
             self.client,
         );
         res

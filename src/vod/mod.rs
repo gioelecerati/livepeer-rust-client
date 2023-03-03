@@ -3,6 +3,12 @@ pub mod task;
 
 pub trait Vod {
     fn list_assets(&self) -> Result<serde_json::Value, crate::errors::Error>;
+    fn list_paginated_assets(
+        &self,
+        limit: usize,
+        start: usize,
+        details: bool,
+    ) -> Result<serde_json::Value, crate::errors::Error>;
     fn get_presigned_url(
         &self,
         video_name: String,
