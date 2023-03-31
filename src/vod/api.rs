@@ -57,8 +57,9 @@ impl crate::vod::Vod for VodApi {
         &self,
         video_file_path: String,
         video_name: String,
+        playback_policy: Option<serde_json::Value>
     ) -> Result<serde_json::Value, errors::Error> {
-        self.clone()._import_asset(video_file_path, video_name)
+        self.clone()._import_asset(video_file_path, video_name, playback_policy)
     }
 
     fn update_asset(
@@ -187,14 +188,24 @@ impl VodApi {
         self: Self,
         url: String,
         name: String,
+        playback_policy: Option<serde_json::Value>
     ) -> Result<serde_json::Value, errors::Error> {
-        let res: Result<serde_json::Value, errors::Error> = crate::utils::SurfRequest::post(
-            format!("{}{}", self.client.config.host, self.urls.vod.import_asset),
+        let mut body = serde_json::json!({
+            "url": url,
+            "name": name,
+        })
+        .to_string();
+        if playback_policy.is_some(){
             serde_json::json!({
                 "url": url,
-                "name": name
+                "name": name,
+                "playbackPolicy": playback_policy.unwrap()
             })
-            .to_string(),
+            .to_string();
+        }
+        let res: Result<serde_json::Value, errors::Error> = crate::utils::SurfRequest::post(
+            format!("{}{}", self.client.config.host, self.urls.vod.import_asset),
+            body,
             self.client,
         );
         res

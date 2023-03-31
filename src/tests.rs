@@ -81,7 +81,7 @@ mod tests {
 
         // Import asset
         println!("{}", "Importing asset".blue());
-        let imported_asset = lp.asset.import_asset(String::from("https://freetestdata.com/wp-content/uploads/2022/02/Free_Test_Data_15MB_MP4.mp4"), String::from("test_asset_name")).unwrap();
+        let imported_asset = lp.asset.import_asset(String::from("https://freetestdata.com/wp-content/uploads/2022/02/Free_Test_Data_15MB_MP4.mp4"), String::from("test_asset_name"), None).unwrap();
         println!("{}", "Success".green());
 
         // Get task by id

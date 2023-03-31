@@ -42,6 +42,7 @@ pub trait Vod {
         &self,
         url: String,
         name: String,
+        playback_policy: Option<serde_json::Value>,
     ) -> Result<serde_json::Value, crate::errors::Error>;
     fn export_to_ipfs(
         &self,
