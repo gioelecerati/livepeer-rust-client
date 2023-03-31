@@ -49,6 +49,7 @@ pub trait Vod {
         asset_id: String,
         nft_metadata: String,
     ) -> Result<serde_json::Value, crate::errors::Error>;
+    fn list_webhooks(&self) -> Result<serde_json::Value, crate::errors::Error>;
 }
 
 pub trait Task {

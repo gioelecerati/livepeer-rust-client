@@ -78,6 +78,10 @@ impl crate::vod::Vod for VodApi {
         let json_nft_metadata = serde_json::from_str(&nft_metadata).unwrap();
         self.clone()._export_to_ipfs(asset_id, json_nft_metadata)
     }
+
+    fn list_webhooks(&self) -> Result<serde_json::Value, crate::errors::Error> {
+        self.clone()._get_webhooks()
+    }
 }
 
 impl VodApi {
@@ -303,6 +307,14 @@ impl VodApi {
             self.client,
         );
 
+        res
+    }
+
+    pub fn _get_webhooks(self: Self) -> Result<serde_json::Value, errors::Error> {
+        let res: Result<serde_json::Value, errors::Error> = crate::utils::SurfRequest::get(
+            format!("{}{}", self.client.config.host, self.urls.vod.list_webhooks),
+            self.client,
+        );
         res
     }
 }

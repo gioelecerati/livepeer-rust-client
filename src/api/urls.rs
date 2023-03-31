@@ -13,6 +13,7 @@ pub struct VodUrls {
     pub import_asset: &'static str,
     pub get_presigned_url: &'static str,
     pub export: &'static str,
+    pub list_webhooks: &'static str,
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -43,6 +44,7 @@ impl LivepeerUrls {
             import_asset: "/api/asset/import",
             get_presigned_url: "/api/asset/request-upload",
             export: "/api/asset/{{ASSET_ID}}/export",
+            list_webhooks: "/api/webhook",
         };
 
         let task = TaskUrls {
