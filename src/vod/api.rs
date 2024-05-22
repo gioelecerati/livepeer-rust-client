@@ -109,7 +109,7 @@ impl VodApi {
             dtls = 1;
         }
         let res: Result<serde_json::Value, errors::Error> = crate::utils::SurfRequest::get(
-            format!("{}{}?limit={}&cursor=skip{}&details={}", self.client.config.host, self.urls.vod.assets, limit, start, dtls),
+            format!("{}{}?limit={}&order=createdAt-true&cursor=skip{}&details={}", self.client.config.host, self.urls.vod.assets, limit, start, dtls),
             self.client,
         );
         res
