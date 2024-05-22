@@ -17,7 +17,7 @@ impl crate::vod::Vod for VodApi {
         self.clone()._get_paginated_assets(limit, start, details)
     }
 
-    fn get_presigned_url(&self, video_name: String) -> Result<serde_json::Value, errors::Error> {
+    fn get_presigned_url(&self, video_name: String, playback_policy: Option<serde_json::Value>) -> Result<serde_json::Value, errors::Error> {
         self.clone()._get_presigned_url(video_name)
     }
 

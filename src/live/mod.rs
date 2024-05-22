@@ -15,5 +15,6 @@ pub trait Stream {
         &self,
         name: &String,
         profiles: &Vec<crate::data::stream::Profile>,
+        playback_policy: Option<serde_json::Value>,
     ) -> Result<String, crate::errors::Error>;
 }

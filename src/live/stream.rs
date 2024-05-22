@@ -27,8 +27,9 @@ impl crate::live::Stream for Stream {
         &self,
         name: &String,
         profiles: &Vec<crate::data::stream::Profile>,
+        playback_policy: Option<serde_json::Value>,
     ) -> Result<String, errors::Error> {
-        self.clone().create_stream(name, profiles)
+        self.clone().create_stream(name, profiles, playback_policy)
     }
 }
 
@@ -97,11 +98,13 @@ impl Stream {
         self: Self,
         name: &String,
         profiles: &Vec<crate::data::stream::Profile>,
+        playback_policy: Option<serde_json::Value>,
     ) -> Result<String, errors::Error> {
         let mut result: Result<String, errors::Error> = Err(errors::Error::CREATESTREAM);
         let mut stream_id: String = "".to_string();
         let mut data = serde_json::json!({
             "name": name,
+            "playback_policy": playback_policy,
             //"profiles": profiles,
         });
         let res: Result<serde_json::Value, errors::Error> = crate::utils::SurfRequest::post(

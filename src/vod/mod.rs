@@ -12,6 +12,7 @@ pub trait Vod {
     fn get_presigned_url(
         &self,
         video_name: String,
+        playback_policy: Option<serde_json::Value>,
     ) -> Result<serde_json::Value, crate::errors::Error>;
     fn upload_asset(
         &self,
