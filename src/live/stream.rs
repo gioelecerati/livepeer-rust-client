@@ -104,7 +104,7 @@ impl Stream {
         let mut stream_id: String = "".to_string();
         let mut data = serde_json::json!({
             "name": name,
-            "playback_policy": playback_policy,
+            "playbackPolicy": playback_policy,
             //"profiles": profiles,
         });
         let res: Result<serde_json::Value, errors::Error> = crate::utils::SurfRequest::post(
