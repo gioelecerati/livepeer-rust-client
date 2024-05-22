@@ -78,7 +78,7 @@ impl Stream {
     ) -> Result<crate::data::stream::Streams, errors::Error> {
         let res: Result<serde_json::Value, errors::Error> = crate::utils::SurfRequest::get(
             format!(
-                r#"{}{}?allUsers=true&streamsonly=1&filters=[{{"id":"userId","value":"{}"}}]"#,
+                r#"{}{}?allUsers=true&streamsonly=1&order=createdAt-true&limit=1000&filters=[{{"id":"userId","value":"{}"}}]"#,
                 self.client.config.host, "/api/stream", user_id
             ),
             self.client,
