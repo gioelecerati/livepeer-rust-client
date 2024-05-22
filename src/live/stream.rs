@@ -23,6 +23,14 @@ impl crate::live::Stream for Stream {
         self.clone().get_streams_by_user_id(user_id)
     }
 
+    fn get_stream_by_playback_id(
+            &self,
+            playback_id: String,
+            admin: bool,
+        ) -> Result<serde_json::Value, crate::errors::Error> {
+            self.clone().get_stream_by_playback_id(playback_id, admin)
+    }
+
     fn create_stream(
         &self,
         name: &String,
@@ -65,6 +73,25 @@ impl Stream {
     ) -> Result<serde_json::Value, errors::Error> {
         let res: Result<serde_json::Value, errors::Error> = crate::utils::SurfRequest::get(
             format!("{}{}/{}", self.client.config.host, "/api/stream", stream_id),
+            self.client,
+        );
+        res
+    }
+
+    pub fn get_stream_by_playback_id(
+        self: Self,
+        playback_id: String,
+        admin: bool,
+    ) -> Result<serde_json::Value, errors::Error> {
+        let mut admin_string = String::new();
+        if admin {
+            admin_string = String::from("&allUsers=true&all=true");
+        }
+        let res: Result<serde_json::Value, errors::Error> = crate::utils::SurfRequest::get(
+            format!(
+                r#"{}{}?filters=[{{"id":"playbackId","value":"{}"}}]{}"#,
+                self.client.config.host, "/api/stream", playback_id, admin_string
+            ),
             self.client,
         );
         res
