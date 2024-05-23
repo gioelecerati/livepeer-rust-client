@@ -18,7 +18,7 @@ impl crate::vod::Vod for VodApi {
     }
 
     fn get_presigned_url(&self, video_name: String, playback_policy: Option<serde_json::Value>) -> Result<serde_json::Value, errors::Error> {
-        self.clone()._get_presigned_url(video_name)
+        self.clone()._get_presigned_url(video_name, playback_policy)
     }
 
     fn upload_asset(
@@ -221,8 +221,9 @@ impl VodApi {
     pub fn _get_presigned_url(
         self: Self,
         video_name: String,
+        playback_policy: Option<serde_json::Value>,
     ) -> Result<serde_json::Value, errors::Error> {
-        let body = serde_json::to_string(&serde_json::json!({ "name": video_name })).unwrap();
+        let body = serde_json::to_string(&serde_json::json!({ "name": video_name, "playbackPolicy": playback_policy })).unwrap();
         let response: Result<serde_json::Value, errors::Error> = crate::utils::SurfRequest::post(
             format!(
                 "{}{}",
