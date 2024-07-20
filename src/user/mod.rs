@@ -56,7 +56,7 @@ pub struct UserInfo {
     pub kind: String,
     pub admin: bool,
     pub email: String,
-    pub last_name: String,
+    pub last_name: Option<String>,
     pub last_seen: i64,
     pub created_at: i64,
     pub first_name: String,
