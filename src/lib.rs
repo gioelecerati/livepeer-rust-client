@@ -15,6 +15,7 @@ pub mod vod;
 
 #[derive(Debug, Clone)]
 pub enum LivepeerEnv {
+    Box,
     Dev,
     Stg,
     Prod,
@@ -68,6 +69,7 @@ impl LivepeerClient {
     /// * `env` - Livepeer Environment
     fn new(api_token: String, env: Option<LivepeerEnv>) -> Self {
         let host = match env {
+            Some(LivepeerEnv::Box) => "http://localhost:8888",
             Some(LivepeerEnv::Dev) => "http://localhost:3004",
             Some(LivepeerEnv::Stg) => "https://livepeer.monster",
             Some(LivepeerEnv::Prod) => "https://livepeer.com",
@@ -77,6 +79,7 @@ impl LivepeerClient {
         };
 
         let rtmp_endpoint = match env {
+            Some(LivepeerEnv::Box) => "rtmp://localhost/live",
             Some(LivepeerEnv::Dev) => "rtmp://127.0.0.1:1935/live",
             Some(LivepeerEnv::Stg) => "rtmp://rtmp.livepeer.monster:11935/live",
             Some(LivepeerEnv::Prod) => "rtmp://rtmp.livepeer.com/live",
