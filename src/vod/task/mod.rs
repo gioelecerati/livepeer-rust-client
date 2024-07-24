@@ -36,14 +36,14 @@ impl TaskApi {
         }
     }
 
+    fn make_request(&self, url: String) -> Result<serde_json::Value, errors::Error> {
+        crate::utils::SurfRequest::get(url, self.client.clone())
+    }
+
     /// List all tasks
     /// <https://docs.livepeer.com/api/vod/tasks.html#list-all-tasks>
     pub fn _list_tasks(self: Self) -> Result<serde_json::Value, errors::Error> {
-        let res: Result<serde_json::Value, errors::Error> = crate::utils::SurfRequest::get(
-            format!("{}{}", self.client.config.host, self.urls.task.list_tasks),
-            self.client,
-        );
-        res
+        self.make_request(format!("{}{}", self.client.config.host, self.urls.task.list_tasks))
     }
 
     /// Get task by id
@@ -52,48 +52,36 @@ impl TaskApi {
         self: Self,
         task_id: String,
     ) -> Result<serde_json::Value, errors::Error> {
-        let res: Result<serde_json::Value, errors::Error> = crate::utils::SurfRequest::get(
-            format!(
-                "{}{}/{}",
-                self.client.config.host, self.urls.task.list_tasks, task_id
-            ),
-            self.client,
-        );
-        res
+        self.make_request(format!(
+            "{}{}/{}",
+            self.client.config.host, self.urls.task.list_tasks, task_id
+        ))
     }
 
     pub fn _get_task_by_output_asset_id(
         self: Self,
         asset_id: String,
     ) -> Result<serde_json::Value, errors::Error> {
-        let res: Result<serde_json::Value, errors::Error> = crate::utils::SurfRequest::get(
-            format!(
-                r#"{}{}?all=true&allUsers=true&filters=[{{"id":"outputAssetId","value":"{}"}}]"#,
-                self.client.config.host, self.urls.task.list_tasks, asset_id
-            ),
-            self.client,
-        );
-        res
+        self.make_request(format!(
+            r#"{}{}?all=true&allUsers=true&filters=[{{"id":"outputAssetId","value":"{}"}}]"#,
+            self.client.config.host, self.urls.task.list_tasks, asset_id
+        ))
     }
 
     pub fn _get_tasks_by_user_id(
         self: Self,
         user_id: String,
     ) -> Result<serde_json::Value, errors::Error> {
-        let res: Result<serde_json::Value, errors::Error> = crate::utils::SurfRequest::get(
-            format!(
-                r#"{}{}?all=true&allUsers=true&filters=[{{"id":"userId","value":"{}"}}]"#,
-                self.client.config.host, self.urls.task.list_tasks, user_id
-            ),
-            self.client,
-        );
-        res
+        self.make_request(format!(
+            r#"{}{}?all=true&allUsers=true&filters=[{{"id":"userId","value":"{}"}}]"#,
+            self.client.config.host, self.urls.task.list_tasks, user_id
+        ))
     }
 
     pub fn get_task_status(self: Self, task_id: String) -> Result<String, errors::Error> {
         let task = self._get_task_by_id(task_id)?;
         let task_status = task["status"]["phase"].as_str().unwrap();
-        return Ok(task_status.to_string());
+        Ok(task_status.to_string())
     }
 
     pub fn wait_for_task(self: Self, task_id: String) -> bool {
@@ -105,10 +93,6 @@ impl TaskApi {
             std::thread::sleep(std::time::Duration::from_secs(1));
         }
 
-        if task_status != "completed" {
-            return false;
-        } else {
-            return true;
-        }
+        task_status == "completed"
     }
 }

@@ -68,32 +68,21 @@ impl LivepeerClient {
     /// * `api_token` - User API token
     /// * `env` - Livepeer Environment
     fn new(api_token: String, env: Option<LivepeerEnv>) -> Self {
-        let host = match env {
-            Some(LivepeerEnv::Box) => "http://localhost:8888",
-            Some(LivepeerEnv::Dev) => "http://localhost:3004",
-            Some(LivepeerEnv::Stg) => "https://livepeer.monster",
-            Some(LivepeerEnv::Prod) => "https://livepeer.com",
-            Some(LivepeerEnv::Origin) => "https://origin.livepeer.com",
-            Some(LivepeerEnv::Test) => "https://origin.livepeer.com",
-            None => "https://livepeer.monster",
-        };
-
-        let rtmp_endpoint = match env {
-            Some(LivepeerEnv::Box) => "rtmp://localhost/live",
-            Some(LivepeerEnv::Dev) => "rtmp://127.0.0.1:1935/live",
-            Some(LivepeerEnv::Stg) => "rtmp://rtmp.livepeer.monster:11935/live",
-            Some(LivepeerEnv::Prod) => "rtmp://rtmp.livepeer.com/live",
-            Some(LivepeerEnv::Origin) => "rtmp://rtmp.livepeer.com/live",
-            Some(LivepeerEnv::Test) => "rtmp://prg-playback.lp-playback.studio/live",
-            None => "rtmp://rtmp.livepeer.monster:11935/live",
+        let (host, rtmp_endpoint) = match env {
+            Some(LivepeerEnv::Box) => ("http://localhost:8888", "rtmp://localhost/live"),
+            Some(LivepeerEnv::Dev) => ("http://localhost:3004", "rtmp://127.0.0.1:1935/live"),
+            Some(LivepeerEnv::Stg) => ("https://livepeer.monster", "rtmp://rtmp.livepeer.monster:11935/live"),
+            Some(LivepeerEnv::Prod) => ("https://livepeer.com", "rtmp://rtmp.livepeer.com/live"),
+            Some(LivepeerEnv::Origin) | Some(LivepeerEnv::Test) => ("https://origin.livepeer.com", "rtmp://prg-playback.lp-playback.studio/live"),
+            None => ("https://livepeer.monster", "rtmp://rtmp.livepeer.monster:11935/live"),
         };
 
         let config = LivepeerConfig {
-            host: host,
-            api_token: api_token,
-            rtmp_endpoint: rtmp_endpoint,
+            host,
+            api_token,
+            rtmp_endpoint,
         };
-        LivepeerClient { config: config }
+        LivepeerClient { config }
     }
 }
 
@@ -104,33 +93,21 @@ impl Livepeer {
     /// * `env` - Livepeer Environment
     /// # Example
     pub fn new(api_token: Option<String>, env: Option<LivepeerEnv>) -> Result<Livepeer, String> {
-        let mut _api_token = String::new();
-        if api_token.is_some() {
-            _api_token = api_token.unwrap();
-        } else {
-            // Get API token from environment
-            _api_token = std::env::var("LIVEPEER_API_TOKEN").unwrap_or_default();
-        }
+        let _api_token = api_token.unwrap_or_else(|| std::env::var("LIVEPEER_API_TOKEN").unwrap_or_default());
         let client = LivepeerClient::new(_api_token.clone(), env.clone());
 
-        let user_info = user::User::new(&client);
-
-        if user_info.is_err() {
-            return Err(user_info.err().unwrap());
-        }
+        let user_info = user::User::new(&client).map_err(|e| e.to_string())?;
 
         Ok(Livepeer {
             _client: client.clone(),
-            _env: env.clone().unwrap_or(LivepeerEnv::Dev),
+            _env: env.unwrap_or(LivepeerEnv::Dev),
             asset: vod::api::VodApi::new(&client),
             task: vod::task::TaskApi::new(&client),
             user_api: user::UserApi::new(&client),
             access_control: accesscontrol::api::AccessControlApi::new(&client),
             stream: live::stream::Stream::new(&client),
-            rtmp: live::rtmp::Rtmp {
-                client: client.clone(),
-            },
-            user: user_info.unwrap(),
+            rtmp: live::rtmp::Rtmp { client: client.clone() },
+            user: user_info,
             playback: playback::api::PlaybackApi::new(&client),
         })
     }

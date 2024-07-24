@@ -6,38 +6,51 @@ use surf::StatusCode;
 pub struct SurfRequest {}
 
 impl SurfRequest {
+    async fn make_request(
+        method: surf::http::Method,
+        url: String,
+        body: Option<String>,
+        client: crate::LivepeerClient,
+    ) -> Result<serde_json::Value, errors::Error> {
+        let mut req = surf::Request::builder(method, url.parse().unwrap())
+            .header("Authorization", format!("Bearer {}", client.config.api_token));
+
+        if let Some(body) = body {
+            req = req.header("Content-Type", "application/json").body(body);
+        }
+
+        let mut res: Result<serde_json::Value, errors::Error> = Err(errors::Error::UNKNOWN);
+
+        let response = req.await;
+
+        match response {
+            Ok(mut response) => match response.status() {
+                StatusCode::Ok | StatusCode::Created | StatusCode::NoContent => {
+                    if response.status() == StatusCode::NoContent {
+                        res = Ok(serde_json::Value::Null);
+                    } else {
+                        let body = response.body_json::<serde_json::Value>().await.unwrap();
+                        res = Ok(body);
+                    }
+                }
+                _ => {
+                    let err = errors::Error::from_response(&response);
+                    res = Err(err);
+                }
+            },
+            Err(e) => {
+                println!("{:?}", e);
+            }
+        }
+
+        res
+    }
+
     pub fn get(
         url: String,
         client: crate::LivepeerClient,
     ) -> Result<serde_json::Value, errors::Error> {
-        let mut res: Result<serde_json::Value, errors::Error> = Err(errors::Error::UNKNOWN);
-
-        async_std::task::block_on(async {
-            let response = surf::get(&format!("{}", url))
-                .header(
-                    "Authorization",
-                    format!("Bearer {}", client.config.api_token),
-                )
-                .await;
-
-            match response {
-                Ok(mut response) => match response.status() {
-                    StatusCode::Ok => {
-                        let r = response.body_json::<serde_json::Value>().await.unwrap();
-                        let body = r;
-                        res = Ok(body);
-                    }
-                    _ => {
-                        let err = errors::Error::from_response(&response);
-                        res = Err(err);
-                    }
-                },
-                Err(e) => {
-                    println!("{:?}", e);
-                }
-            }
-        });
-        return res;
+        async_std::task::block_on(Self::make_request(surf::http::Method::Get, url, None, client))
     }
 
     pub fn post(
@@ -45,36 +58,7 @@ impl SurfRequest {
         body: String,
         client: crate::LivepeerClient,
     ) -> Result<serde_json::Value, errors::Error> {
-        let mut res: Result<serde_json::Value, errors::Error> = Err(errors::Error::UNKNOWN);
-
-        async_std::task::block_on(async {
-            let response = surf::post(&format!("{}", url))
-                .header(
-                    "Authorization",
-                    format!("Bearer {}", client.config.api_token),
-                )
-                .header("Content-Type", "application/json")
-                .body(body)
-                .await;
-
-            match response {
-                Ok(mut response) => match response.status() {
-                    StatusCode::Ok | StatusCode::Created | StatusCode::NoContent => {
-                        let body = response.body_json::<serde_json::Value>().await.unwrap();
-                        res = Ok(body);
-                    }
-                    _ => {
-                        println!("Error on API POST with status code: {}", response.status());
-                        let err = errors::Error::from_response(&response);
-                        res = Err(err);
-                    }
-                },
-                Err(e) => {
-                    println!("{:?}", e);
-                }
-            }
-        });
-        return res;
+        async_std::task::block_on(Self::make_request(surf::http::Method::Post, url, Some(body), client))
     }
 
     pub fn patch(
@@ -82,72 +66,13 @@ impl SurfRequest {
         body: String,
         client: crate::LivepeerClient,
     ) -> Result<serde_json::Value, errors::Error> {
-        let mut res: Result<serde_json::Value, errors::Error> = Err(errors::Error::UNKNOWN);
-
-        async_std::task::block_on(async {
-            let response = surf::patch(&format!("{}", url))
-                .header(
-                    "Authorization",
-                    format!("Bearer {}", client.config.api_token),
-                )
-                .header("Content-Type", "application/json")
-                .body(body)
-                .await;
-
-            match response {
-                Ok(mut response) => match response.status() {
-                    StatusCode::Ok | StatusCode::Created | StatusCode::NoContent => {
-                        let body = response.body_json::<serde_json::Value>().await.unwrap();
-                        res = Ok(body);
-                    }
-                    _ => {
-                        println!("Error on API PATCH with status code: {}", response.status());
-                        let err = errors::Error::from_response(&response);
-                        res = Err(err);
-                    }
-                },
-                Err(e) => {
-                    println!("{:?}", e);
-                }
-            }
-        });
-        return res;
+        async_std::task::block_on(Self::make_request(surf::http::Method::Patch, url, Some(body), client))
     }
 
     pub fn delete(
         url: String,
         client: crate::LivepeerClient,
     ) -> Result<serde_json::Value, errors::Error> {
-        let mut res: Result<serde_json::Value, errors::Error> = Err(errors::Error::UNKNOWN);
-
-        async_std::task::block_on(async {
-            let response = surf::delete(&format!("{}", url))
-                .header(
-                    "Authorization",
-                    format!("Bearer {}", client.config.api_token),
-                )
-                .await;
-
-            match response {
-                Ok(mut response) => match response.status() {
-                    StatusCode::Ok | StatusCode::Created | StatusCode::NoContent => {
-                        //let body = response.body_json::<serde_json::Value>().await.unwrap();
-                        res = Ok(serde_json::Value::Null);
-                    }
-                    _ => {
-                        println!(
-                            "Error on API DELETE with status code: {}",
-                            response.status()
-                        );
-                        let err = errors::Error::from_response(&response);
-                        res = Err(err);
-                    }
-                },
-                Err(e) => {
-                    println!("{:?}", e);
-                }
-            }
-        });
-        return res;
+        async_std::task::block_on(Self::make_request(surf::http::Method::Delete, url, None, client))
     }
 }
