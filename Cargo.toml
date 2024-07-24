@@ -1,8 +1,8 @@
 [package]
 name = "livepeer-rs"
-version = "0.0.1"
+version = "0.0.2"
 edition = "2021"
-description = "Lens Protocol API client"
+description = "Livepeer Studio API client"
 license = "MIT"
 repository = "https://github.com/gioelecerati/livepeer-rs"
 readme = "README.md"

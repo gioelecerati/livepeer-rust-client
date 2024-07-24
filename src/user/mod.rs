@@ -14,16 +14,37 @@ pub struct UserApi {
 }
 
 pub trait UserTrait {
+    /// Get user information by user ID
+    ///
+    /// # Parameters
+    /// * `user_id` - The ID of the user
+    ///
+    /// # Returns
+    /// * `Result<serde_json::Value, String>` - A JSON value containing the user information or an error message
     fn get_user_info_by_id(&self, user_id: String) -> Result<serde_json::Value, String>;
 }
 
 impl UserTrait for UserApi {
+    /// Get user information by user ID
+    ///
+    /// # Parameters
+    /// * `user_id` - The ID of the user
+    ///
+    /// # Returns
+    /// * `Result<serde_json::Value, String>` - A JSON value containing the user information or an error message
     fn get_user_info_by_id(&self, user_id: String) -> Result<serde_json::Value, String> {
         self.clone()._get_user_info_by_id(user_id)
     }
 }
 
 impl UserApi {
+    /// Create a new UserApi instance
+    ///
+    /// # Parameters
+    /// * `client` - A reference to the LivepeerClient
+    ///
+    /// # Returns
+    /// * `Self` - A new instance of UserApi
     pub fn new(client: &crate::LivepeerClient) -> Self {
         UserApi {
             client: client.clone(),
@@ -31,20 +52,24 @@ impl UserApi {
         }
     }
 
+    /// Internal method to get user information by user ID
+    ///
+    /// # Parameters
+    /// * `user_id` - The ID of the user
+    ///
+    /// # Returns
+    /// * `Result<serde_json::Value, String>` - A JSON value containing the user information or an error message
     pub fn _get_user_info_by_id(&self, user_id: String) -> Result<serde_json::Value, String> {
-        let response = crate::utils::SurfRequest::get(
+        match crate::utils::SurfRequest::get(
             format!(
                 "{}{}",
                 self.client.config.host,
                 format!("/api/user/{}", user_id)
             ),
             self.client.clone(),
-        );
-
-        if let Ok(_r) = response {
-            return Ok(_r);
-        } else {
-            return Err("Error getting user info".to_string());
+        ) {
+            Ok(response) => Ok(response),
+            Err(_) => Err("Error getting user info".to_string()),
         }
     }
 }
@@ -68,50 +93,62 @@ pub struct UserInfo {
 }
 
 impl User {
+    /// Create a new User instance
+    ///
+    /// # Parameters
+    /// * `client` - A reference to the LivepeerClient
+    ///
+    /// # Returns
+    /// * `Result<Self, String>` - A new instance of User or an error message
     pub fn new(client: &crate::LivepeerClient) -> Result<Self, String> {
-        let user_info = get_user_info(&client);
-        if user_info.is_err() {
-            return Err(user_info.err().unwrap());
+        match get_user_info(&client) {
+            Ok(user_info) => {
+                let user_id = user_info.clone().id;
+                Ok(User {
+                    client: client.clone(),
+                    user_id,
+                    info: user_info,
+                })
+            }
+            Err(err) => Err(err),
         }
-
-        let usi = user_info.unwrap();
-
-        let user_id = usi.clone().id;
-        Ok(User {
-            client: client.clone(),
-            user_id: user_id,
-            info: usi,
-        })
     }
 }
 
-/// Get the user id from the API
+/// Get the user information from the API
+///
+/// # Parameters
+/// * `client` - A reference to the LivepeerClient
+///
+/// # Returns
+/// * `Result<UserInfo, String>` - A UserInfo struct containing the user information or an error message
 pub fn get_user_info(client: &crate::LivepeerClient) -> Result<UserInfo, String> {
-    let response: Result<serde_json::Value, crate::errors::Error> = crate::utils::SurfRequest::get(
+    match crate::utils::SurfRequest::get(
         format!("{}{}", client.config.host, "/api/user/me"),
         client.clone(),
-    );
-
-    if let Ok(_r) = response {
-        return Ok(serde_json::from_value(_r).unwrap());
-    } else {
-        return Err("Error getting user id".to_string());
+    ) {
+        Ok(response) => Ok(serde_json::from_value(response).unwrap()),
+        Err(_) => Err("Error getting user id".to_string()),
     }
 }
 
-/// Get user info by user_id
+/// Get user information by user ID
+///
+/// # Parameters
+/// * `client` - A reference to the LivepeerClient
+/// * `user_id` - The ID of the user
+///
+/// # Returns
+/// * `Result<UserInfo, String>` - A UserInfo struct containing the user information or an error message
 pub fn get_user_info_by_id(
     client: &crate::LivepeerClient,
     user_id: String,
 ) -> Result<UserInfo, String> {
-    let response: Result<serde_json::Value, crate::errors::Error> = crate::utils::SurfRequest::get(
+    match crate::utils::SurfRequest::get(
         format!("{}{}", client.config.host, format!("/api/user/{}", user_id)),
         client.clone(),
-    );
-
-    if let Ok(_r) = response {
-        return Ok(serde_json::from_value(_r).unwrap());
-    } else {
-        return Err("Error getting user id".to_string());
+    ) {
+        Ok(response) => Ok(serde_json::from_value(response).unwrap()),
+        Err(_) => Err("Error getting user id".to_string()),
     }
 }

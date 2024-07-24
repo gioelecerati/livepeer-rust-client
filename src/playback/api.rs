@@ -9,12 +9,26 @@ pub struct PlaybackApi {
 }
 
 impl crate::playback::Playback for PlaybackApi {
+    /// Get playback information
+    ///
+    /// # Parameters
+    /// * `id` - The ID of the playback
+    ///
+    /// # Returns
+    /// * `Result<serde_json::Value, errors::Error>` - A JSON value containing the playback information or an error
     fn get_playback_info(&self, id: &String) -> Result<serde_json::Value, errors::Error> {
-        self.clone()._get_playback_info(id)
+        self._get_playback_info(id)
     }
 }
 
 impl PlaybackApi {
+    /// Create a new instance of PlaybackApi
+    ///
+    /// # Parameters
+    /// * `client` - A reference to the LivepeerClient
+    ///
+    /// # Returns
+    /// * `Self` - A new instance of PlaybackApi
     pub fn new(client: &crate::LivepeerClient) -> Self {
         PlaybackApi {
             client: client.clone(),
@@ -22,14 +36,20 @@ impl PlaybackApi {
         }
     }
 
-    pub fn _get_playback_info(self, id: &String) -> Result<serde_json::Value, errors::Error> {
-        let res: Result<serde_json::Value, errors::Error> = crate::utils::SurfRequest::get(
+    /// Get playback information
+    ///
+    /// # Parameters
+    /// * `id` - The ID of the playback
+    ///
+    /// # Returns
+    /// * `Result<serde_json::Value, errors::Error>` - A JSON value containing the playback information or an error
+    pub fn _get_playback_info(&self, id: &String) -> Result<serde_json::Value, errors::Error> {
+        crate::utils::SurfRequest::get(
             format!(
                 "{}{}/{}",
                 self.client.config.host, self.urls.playback.get_playback_info, id
             ),
-            self.client,
-        );
-        res
+            self.client.clone(),
+        )
     }
 }

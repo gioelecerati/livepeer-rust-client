@@ -8,14 +8,32 @@ pub struct Stream {
 }
 
 impl crate::live::Stream for Stream {
+    /// List all streams
+    ///
+    /// # Returns
+    /// * `Result<crate::data::stream::Streams, errors::Error>` - A list of streams or an error
     fn list_streams(&self) -> Result<crate::data::stream::Streams, errors::Error> {
         self.clone().list_streams()
     }
 
+    /// Get stream by ID
+    ///
+    /// # Parameters
+    /// * `stream_id` - The ID of the stream
+    ///
+    /// # Returns
+    /// * `Result<serde_json::Value, errors::Error>` - A JSON value containing the stream or an error
     fn get_stream_by_id(&self, stream_id: String) -> Result<serde_json::Value, errors::Error> {
         self.clone().get_stream_by_id(stream_id)
     }
 
+    /// Get streams by user ID
+    ///
+    /// # Parameters
+    /// * `user_id` - The ID of the user
+    ///
+    /// # Returns
+    /// * `Result<crate::data::stream::Streams, errors::Error>` - A list of streams or an error
     fn get_streams_by_user_id(
         &self,
         user_id: String,
@@ -23,6 +41,14 @@ impl crate::live::Stream for Stream {
         self.clone().get_streams_by_user_id(user_id)
     }
 
+    /// Get stream by playback ID
+    ///
+    /// # Parameters
+    /// * `playback_id` - The ID of the playback
+    /// * `admin` - A boolean indicating if the request is made by an admin
+    ///
+    /// # Returns
+    /// * `Result<serde_json::Value, crate::errors::Error>` - A JSON value containing the stream or an error
     fn get_stream_by_playback_id(
             &self,
             playback_id: String,
@@ -31,6 +57,15 @@ impl crate::live::Stream for Stream {
             self.clone().get_stream_by_playback_id(playback_id, admin)
     }
 
+    /// Create a stream
+    ///
+    /// # Parameters
+    /// * `name` - The name of the stream
+    /// * `profiles` - A list of profiles for the stream
+    /// * `playback_policy` - An optional playback policy
+    ///
+    /// # Returns
+    /// * `Result<String, errors::Error>` - The ID of the created stream or an error
     fn create_stream(
         &self,
         name: &String,
@@ -42,6 +77,13 @@ impl crate::live::Stream for Stream {
 }
 
 impl Stream {
+    /// Create a new Stream instance
+    ///
+    /// # Parameters
+    /// * `client` - A reference to the LivepeerClient
+    ///
+    /// # Returns
+    /// * `Self` - A new instance of Stream
     pub fn new(client: &crate::LivepeerClient) -> Self {
         Stream {
             client: client.clone(),
@@ -50,7 +92,9 @@ impl Stream {
     }
 
     /// List all streams
-    /// <https://docs.livepeer.com/api/live/streams.html#list-all-streams>
+    ///
+    /// # Returns
+    /// * `Result<crate::data::stream::Streams, errors::Error>` - A list of streams or an error
     pub fn list_streams(self: Self) -> Result<crate::data::stream::Streams, errors::Error> {
         let res: Result<serde_json::Value, errors::Error> = crate::utils::SurfRequest::get(
             format!("{}{}", self.client.config.host, "/api/stream?streamsonly=1"),
@@ -65,8 +109,13 @@ impl Stream {
         r
     }
 
-    /// Get stream by id
-    /// <https://docs.livepeer.com/api/live/streams.html#get-stream-by-id>
+    /// Get stream by ID
+    ///
+    /// # Parameters
+    /// * `stream_id` - The ID of the stream
+    ///
+    /// # Returns
+    /// * `Result<serde_json::Value, errors::Error>` - A JSON value containing the stream or an error
     pub fn get_stream_by_id(
         self: Self,
         stream_id: String,
@@ -78,6 +127,14 @@ impl Stream {
         res
     }
 
+    /// Get stream by playback ID
+    ///
+    /// # Parameters
+    /// * `playback_id` - The ID of the playback
+    /// * `admin` - A boolean indicating if the request is made by an admin
+    ///
+    /// # Returns
+    /// * `Result<serde_json::Value, errors::Error>` - A JSON value containing the stream or an error
     pub fn get_stream_by_playback_id(
         self: Self,
         playback_id: String,
@@ -97,8 +154,13 @@ impl Stream {
         res
     }
 
-    /// Get streams by user id
-    /// <https://docs.livepeer.com/api/live/streams.html#get-streams-by-user-id>
+    /// Get streams by user ID
+    ///
+    /// # Parameters
+    /// * `user_id` - The ID of the user
+    ///
+    /// # Returns
+    /// * `Result<crate::data::stream::Streams, errors::Error>` - A list of streams or an error
     pub fn get_streams_by_user_id(
         self: Self,
         user_id: String,
@@ -120,7 +182,14 @@ impl Stream {
     }
 
     /// Create a stream
-    /// <https://docs.livepeer.com/api/live/streams.html#create-a-stream>
+    ///
+    /// # Parameters
+    /// * `name` - The name of the stream
+    /// * `profiles` - A list of profiles for the stream
+    /// * `playback_policy` - An optional playback policy
+    ///
+    /// # Returns
+    /// * `Result<String, errors::Error>` - The ID of the created stream or an error
     pub fn create_stream(
         self: Self,
         name: &String,
