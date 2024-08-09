@@ -12,6 +12,7 @@ pub mod tests;
 pub mod user;
 pub mod utils;
 pub mod vod;
+pub mod ai;
 
 #[derive(Debug, Clone)]
 pub enum LivepeerEnv {
@@ -60,6 +61,8 @@ pub struct Livepeer {
     pub user: user::User,
     /// Playback Info
     pub playback: playback::api::PlaybackApi,
+    /// AI API set
+    pub generate: ai::api::GenerateApi,
 }
 
 impl LivepeerClient {
@@ -109,6 +112,7 @@ impl Livepeer {
             rtmp: live::rtmp::Rtmp { client: client.clone() },
             user: user_info,
             playback: playback::api::PlaybackApi::new(&client),
+            generate: ai::api::GenerateApi::new(&client),
         })
     }
 }

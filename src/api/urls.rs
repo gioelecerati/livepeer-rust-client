@@ -5,6 +5,7 @@ pub struct LivepeerUrls {
     pub auth: AuthUrls,
     pub access_control: AccessControlUrls,
     pub playback: PlaybackUrls,
+    pub generate: AiUrls,
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -14,6 +15,11 @@ pub struct VodUrls {
     pub get_presigned_url: &'static str,
     pub export: &'static str,
     pub list_webhooks: &'static str,
+}
+
+#[derive(Debug, Clone, Copy)]
+pub struct AiUrls {
+    pub text_to_image: &'static str,
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -64,12 +70,17 @@ impl LivepeerUrls {
             get_playback_info: "/api/playback",
         };
 
+        let generate = AiUrls {
+            text_to_image: "/api/beta/generate/text-to-image",
+        };
+
         let urls = LivepeerUrls {
             vod,
             task,
             auth,
             access_control,
             playback,
+            generate,
         };
         urls
     }
