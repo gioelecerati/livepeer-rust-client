@@ -19,6 +19,10 @@ impl crate::ai::Generate for GenerateApi {
     fn text_to_image(&self, prompt: &String) -> Result<serde_json::Value, errors::Error> {
         self.clone()._text_to_image(prompt)
     }
+
+    fn image_to_video(&self, image_file_path: &String) -> Result<serde_json::Value, errors::Error> {
+        self.clone()._image_to_video(image_file_path)
+    }
 }
 
 impl GenerateApi {
@@ -61,5 +65,26 @@ impl GenerateApi {
             result = Ok(output)
         }
         result
+    }
+
+    pub fn _image_to_video(
+        self: Self,
+        image_file_path: &String,
+    ) -> Result<serde_json::Value, errors::Error> {
+        let file = std::fs::read(image_file_path).unwrap();
+        let file_part = reqwest::multipart::Part::bytes(file)
+            .file_name("bg.jpg")
+            .mime_str("image/jpg")
+            .unwrap();
+        let form = reqwest::multipart::Form::new()
+            .part("image", file_part);
+
+        let res: Result<serde_json::Value, errors::Error> = crate::utils::ReqwestRequest::post_multipart(
+            format!("{}{}", self.client.config.host, self.urls.generate.image_to_video),
+            form,
+            self.client,
+        );
+
+        res.and_then(|value| serde_json::from_value(value).map_err(|_| errors::Error::CREATESTREAM))
     }
 }
