@@ -157,7 +157,7 @@ impl VodApi {
 
     /// Internal method to get all assets
     fn _get_assets(&self) -> Result<serde_json::Value, errors::Error> {
-        crate::utils::SurfRequest::get(
+        crate::utils::ReqwestRequest::get(
             format!("{}{}", self.client.config.host, self.urls.vod.assets),
             self.client.clone(),
         )
@@ -166,7 +166,7 @@ impl VodApi {
     /// Internal method to get paginated assets
     fn _get_paginated_assets(&self, limit: usize, start: usize, details: bool) -> Result<serde_json::Value, errors::Error> {
         let dtls = if details { 1 } else { 0 };
-        crate::utils::SurfRequest::get(
+        crate::utils::ReqwestRequest::get(
             format!("{}{}?limit={}&order=createdAt-true&cursor=skip{}&details={}", self.client.config.host, self.urls.vod.assets, limit, start, dtls),
             self.client.clone(),
         )
@@ -174,7 +174,7 @@ impl VodApi {
 
     /// Internal method to get an asset by its ID
     fn _get_asset_by_id(&self, asset_id: String) -> Result<serde_json::Value, errors::Error> {
-        crate::utils::SurfRequest::get(
+        crate::utils::ReqwestRequest::get(
             format!("{}{}/{}", self.client.config.host, self.urls.vod.assets, asset_id),
             self.client.clone(),
         )
@@ -183,7 +183,7 @@ impl VodApi {
     /// Internal method to get an asset by its playback ID
     fn _get_asset_by_playback_id(&self, playback_id: String, admin: bool) -> Result<serde_json::Value, errors::Error> {
         let admin_string = if admin { "&allUsers=true&all=true" } else { "" };
-        crate::utils::SurfRequest::get(
+        crate::utils::ReqwestRequest::get(
             format!("{}{}?playbackId={}{}", self.client.config.host, self.urls.vod.assets, playback_id, admin_string),
             self.client.clone(),
         )
@@ -192,7 +192,7 @@ impl VodApi {
     /// Internal method to get assets by their CID
     fn _get_assets_by_cid(&self, cid: String, admin: bool) -> Result<serde_json::Value, errors::Error> {
         let admin_string = if admin { "&allUsers=true&all=true" } else { "" };
-        crate::utils::SurfRequest::get(
+        crate::utils::ReqwestRequest::get(
             format!("{}{}?cid={}{}", self.client.config.host, self.urls.vod.assets, cid, admin_string),
             self.client.clone(),
         )
@@ -200,7 +200,7 @@ impl VodApi {
 
     /// Internal method to get assets by user ID
     fn _get_assets_by_user_id(&self, user_id: String) -> Result<serde_json::Value, errors::Error> {
-        crate::utils::SurfRequest::get(
+        crate::utils::ReqwestRequest::get(
             format!(r#"{}{}?all=true&allUsers=true&filters=[{{"id":"userId","value":"{}"}}]"#, self.client.config.host, self.urls.vod.assets, user_id),
             self.client.clone(),
         )
@@ -213,7 +213,7 @@ impl VodApi {
         } else {
             serde_json::json!({ "url": url, "name": name }).to_string()
         };
-        crate::utils::SurfRequest::post(
+        crate::utils::ReqwestRequest::post(
             format!("{}{}", self.client.config.host, self.urls.vod.import_asset),
             body,
             self.client.clone(),
@@ -223,7 +223,7 @@ impl VodApi {
     /// Internal method to get a presigned URL for uploading a video
     fn _get_presigned_url(&self, video_name: String, playback_policy: Option<serde_json::Value>) -> Result<serde_json::Value, errors::Error> {
         let body = serde_json::to_string(&serde_json::json!({ "name": video_name, "playbackPolicy": playback_policy })).unwrap();
-        crate::utils::SurfRequest::post(
+        crate::utils::ReqwestRequest::post(
             format!("{}{}", self.client.config.host, self.urls.vod.get_presigned_url),
             body,
             self.client.clone(),
@@ -255,7 +255,7 @@ impl VodApi {
 
     /// Internal method to update an asset
     fn _update_asset(&self, asset_id: String, payload: serde_json::Value) -> Result<serde_json::Value, errors::Error> {
-        crate::utils::SurfRequest::patch(
+        crate::utils::ReqwestRequest::patch(
             format!("{}{}/{}", self.client.config.host, self.urls.vod.assets, asset_id),
             serde_json::json!(payload).to_string(),
             self.client.clone(),
@@ -265,7 +265,7 @@ impl VodApi {
     /// Internal method to export an asset to IPFS
     fn _export_to_ipfs(&self, asset_id: String, nft_metadata: serde_json::Value) -> Result<serde_json::Value, errors::Error> {
         let body = serde_json::to_string(&serde_json::json!({ "ipfs": nft_metadata })).unwrap();
-        crate::utils::SurfRequest::post(
+        crate::utils::ReqwestRequest::post(
             format!("{}/api/asset/{}/{}", self.client.config.host, asset_id, "export"),
             body,
             self.client.clone(),
@@ -274,7 +274,7 @@ impl VodApi {
 
     /// Internal method to get all webhooks
     fn _get_webhooks(&self) -> Result<serde_json::Value, errors::Error> {
-        crate::utils::SurfRequest::get(
+        crate::utils::ReqwestRequest::get(
             format!("{}{}", self.client.config.host, self.urls.vod.list_webhooks),
             self.client.clone(),
         )

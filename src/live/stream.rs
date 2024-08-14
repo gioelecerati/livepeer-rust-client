@@ -96,7 +96,7 @@ impl Stream {
     /// # Returns
     /// * `Result<crate::data::stream::Streams, errors::Error>` - A list of streams or an error
     pub fn list_streams(self: Self) -> Result<crate::data::stream::Streams, errors::Error> {
-        let res: Result<serde_json::Value, errors::Error> = crate::utils::SurfRequest::get(
+        let res: Result<serde_json::Value, errors::Error> = crate::utils::ReqwestRequest::get(
             format!("{}{}", self.client.config.host, "/api/stream?streamsonly=1"),
             self.client,
         );
@@ -120,7 +120,7 @@ impl Stream {
         self: Self,
         stream_id: String,
     ) -> Result<serde_json::Value, errors::Error> {
-        let res: Result<serde_json::Value, errors::Error> = crate::utils::SurfRequest::get(
+        let res: Result<serde_json::Value, errors::Error> = crate::utils::ReqwestRequest::get(
             format!("{}{}/{}", self.client.config.host, "/api/stream", stream_id),
             self.client,
         );
@@ -144,7 +144,7 @@ impl Stream {
         if admin {
             admin_string = String::from("&allUsers=true&all=true");
         }
-        let res: Result<serde_json::Value, errors::Error> = crate::utils::SurfRequest::get(
+        let res: Result<serde_json::Value, errors::Error> = crate::utils::ReqwestRequest::get(
             format!(
                 r#"{}{}?filters=[{{"id":"playbackId","value":"{}"}}]{}"#,
                 self.client.config.host, "/api/stream", playback_id, admin_string
@@ -165,7 +165,7 @@ impl Stream {
         self: Self,
         user_id: String,
     ) -> Result<crate::data::stream::Streams, errors::Error> {
-        let res: Result<serde_json::Value, errors::Error> = crate::utils::SurfRequest::get(
+        let res: Result<serde_json::Value, errors::Error> = crate::utils::ReqwestRequest::get(
             format!(
                 r#"{}{}?allUsers=true&streamsonly=1&order=createdAt-true&limit=1000&filters=[{{"id":"userId","value":"{}"}}]"#,
                 self.client.config.host, "/api/stream", user_id
@@ -203,7 +203,7 @@ impl Stream {
             "playbackPolicy": playback_policy.unwrap(),
             //"profiles": profiles,
         });
-        let res: Result<serde_json::Value, errors::Error> = crate::utils::SurfRequest::post(
+        let res: Result<serde_json::Value, errors::Error> = crate::utils::ReqwestRequest::post(
             format!("{}{}", self.client.config.host, "/api/stream"),
             serde_json::to_string(&data).unwrap(),
             self.client,

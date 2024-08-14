@@ -31,7 +31,7 @@ impl AccessControlApi {
     /// List all Signing keys
     ///
     pub fn _get_signing_keys(&self) -> Result<serde_json::Value, errors::Error> {
-        crate::utils::SurfRequest::get(
+        crate::utils::ReqwestRequest::get(
             format!(
                 "{}{}",
                 self.client.config.host, self.urls.access_control.signing_key
@@ -44,7 +44,7 @@ impl AccessControlApi {
         &self,
         name: String,
     ) -> Result<serde_json::Value, errors::Error> {
-        crate::utils::SurfRequest::post(
+        crate::utils::ReqwestRequest::post(
             format!(
                 "{}{}",
                 self.client.config.host, self.urls.access_control.signing_key
@@ -55,7 +55,7 @@ impl AccessControlApi {
     }
 
     pub fn _delete_signing_key(&self, id: String) -> Result<serde_json::Value, errors::Error> {
-        crate::utils::SurfRequest::delete(
+        crate::utils::ReqwestRequest::delete(
             format!(
                 "{}{}/{}",
                 self.client.config.host, self.urls.access_control.signing_key, id

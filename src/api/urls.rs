@@ -20,6 +20,7 @@ pub struct VodUrls {
 #[derive(Debug, Clone, Copy)]
 pub struct AiUrls {
     pub text_to_image: &'static str,
+    pub image_to_video: &'static str,
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -72,6 +73,7 @@ impl LivepeerUrls {
 
         let generate = AiUrls {
             text_to_image: "/api/beta/generate/text-to-image",
+            image_to_video: "/api/beta/generate/image-to-video",
         };
 
         let urls = LivepeerUrls {

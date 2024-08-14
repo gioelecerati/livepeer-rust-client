@@ -60,7 +60,7 @@ impl UserApi {
     /// # Returns
     /// * `Result<serde_json::Value, String>` - A JSON value containing the user information or an error message
     pub fn _get_user_info_by_id(&self, user_id: String) -> Result<serde_json::Value, String> {
-        match crate::utils::SurfRequest::get(
+        match crate::utils::ReqwestRequest::get(
             format!(
                 "{}{}",
                 self.client.config.host,
@@ -123,7 +123,7 @@ impl User {
 /// # Returns
 /// * `Result<UserInfo, String>` - A UserInfo struct containing the user information or an error message
 pub fn get_user_info(client: &crate::LivepeerClient) -> Result<UserInfo, String> {
-    match crate::utils::SurfRequest::get(
+    match crate::utils::ReqwestRequest::get(
         format!("{}{}", client.config.host, "/api/user/me"),
         client.clone(),
     ) {
@@ -144,7 +144,7 @@ pub fn get_user_info_by_id(
     client: &crate::LivepeerClient,
     user_id: String,
 ) -> Result<UserInfo, String> {
-    match crate::utils::SurfRequest::get(
+    match crate::utils::ReqwestRequest::get(
         format!("{}{}", client.config.host, format!("/api/user/{}", user_id)),
         client.clone(),
     ) {

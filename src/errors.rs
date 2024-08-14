@@ -33,4 +33,15 @@ impl Error {
             _ => Error::UNKNOWN,
         }
     }
+
+    pub fn from_reqwest_response(response: &reqwest::Response) -> Self {
+        // Implement error handling logic based on the reqwest Response
+        // For example:
+        match response.status() {
+            reqwest::StatusCode::BAD_REQUEST => Error::BADREQUEST,
+            reqwest::StatusCode::UNAUTHORIZED => Error::UNAUTHORIZED,
+            // ... other status code mappings ...
+            _ => Error::UNKNOWN,
+        }
+    }
 }

@@ -44,7 +44,7 @@ impl PlaybackApi {
     /// # Returns
     /// * `Result<serde_json::Value, errors::Error>` - A JSON value containing the playback information or an error
     pub fn _get_playback_info(&self, id: &String) -> Result<serde_json::Value, errors::Error> {
-        crate::utils::SurfRequest::get(
+        crate::utils::ReqwestRequest::get(
             format!(
                 "{}{}/{}",
                 self.client.config.host, self.urls.playback.get_playback_info, id

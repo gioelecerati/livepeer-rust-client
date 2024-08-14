@@ -69,7 +69,7 @@ impl TaskApi {
     /// # Returns
     /// * `Result<serde_json::Value, errors::Error>` - A JSON value containing the response or an error
     fn make_request(&self, url: String) -> Result<serde_json::Value, errors::Error> {
-        crate::utils::SurfRequest::get(url, self.client.clone())
+        crate::utils::ReqwestRequest::get(url, self.client.clone())
     }
 
     /// List all tasks

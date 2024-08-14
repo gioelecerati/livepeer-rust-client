@@ -51,7 +51,7 @@ impl GenerateApi {
         let mut data = serde_json::json!({
             "prompt": prompt,
         });
-        let res: Result<serde_json::Value, errors::Error> = crate::utils::SurfRequest::post(
+        let res: Result<serde_json::Value, errors::Error> = crate::utils::ReqwestRequest::post(
             format!("{}{}", self.client.config.host, self.urls.generate.text_to_image),
             serde_json::to_string(&data).unwrap(),
             self.client,
