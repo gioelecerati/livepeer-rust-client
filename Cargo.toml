@@ -20,5 +20,5 @@ serde = { version = "1.0", features = ["derive"] }
 colored = "2.0.0"
 ffmpeg-next = "5.0.3"
 rand = "0.8.3"
-reqwest = "0.12.5"
+reqwest = { version = "0.12.5", features = ["multipart"] }
 tokio = { version = "1.39.2", features = ["full"] }
