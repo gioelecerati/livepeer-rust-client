@@ -51,7 +51,7 @@ impl GenerateApi {
         self: Self,
         prompt: &String,
     ) -> Result<serde_json::Value, errors::Error> {
-        let mut result: Result<serde_json::Value, errors::Error> = Err(errors::Error::CREATESTREAM);
+        let mut result: Result<serde_json::Value, errors::Error> = Err(errors::Error::GENERATE);
         let mut data = serde_json::json!({
             "prompt": prompt,
         });
@@ -85,6 +85,6 @@ impl GenerateApi {
             self.client,
         );
 
-        res.and_then(|value| serde_json::from_value(value).map_err(|_| errors::Error::CREATESTREAM))
+        res.and_then(|value| serde_json::from_value(value).map_err(|_| errors::Error::GENERATE))
     }
 }

@@ -16,6 +16,7 @@ pub enum Error {
     BADGATEWAY,
     LISTSTREAMS,
     CREATESTREAM,
+    GENERATE,
 }
 
 impl Error {
